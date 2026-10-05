@@ -81,3 +81,11 @@ Comentarios: palabras clave como disección, traer a la naturaleza adelante desd
 Buscar el lugar incómodo: ¿la espiritualida? ¿las flores? ¿el infinito? ¿la ilustración? porque tal parece que hasta ahora la investigación ha permanecido en el territorio de lo ya conocido.
 
 Próxima semana: intentar entrar a algo más opaco, algo más difícil. Para que la desorientación sea productiva, hay que seguir insistiendo.
+
+> Revisar como el mago se presenta como figura (ya que mi foco, siempre está en los materiales), colocando al mago como un ser virtuoso que saca algo de nada.
+>
+> Cabría pensar cómo opera el aspecto deceptivo del mago. De su interés por el defraudar la expectativa. Del mago de la naturaleza que usa técnicas de captura para otros seres. Del uso de las tecnologías para la manipulación. De la producción de armas de destrucción masiva. 
+
+El hombre “desconoce que el medio es también el masaje; que, juegos de palabras aparte, literalmente trabaja, satura, moldea y transforma todas las relaciones de los sentidos. El contenido o mensaje de cualquier medio particular tiene tanta importancia como un grabado en la cubierta de una bomba atómica”.
+
+https://www.scientificamerican.com/article/deception-in-the-animal-kingdom/
