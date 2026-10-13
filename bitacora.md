@@ -119,6 +119,8 @@ En nuestro plano de realidad, podemos encontrar ejemplos de como la operación c
 
 ej: herón de alejandría y sus máquinas de vapor que él decía que estaban hechas para el asombro (Tybjerg, 2003)
 
+ej: simón el mago como transgresor de la orden divina y apedreado
+
 seguir: mencionar la distancia entre el mago que transforma la realidad, a veces para aclararla, a veces para opacarla
 
 quizá acciones de hackers

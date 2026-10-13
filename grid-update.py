@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import html
 import os
+import random
 import re
 from pathlib import Path
 
@@ -31,19 +32,24 @@ def parse_images_from_md():
         alt_text = match.group(1).strip()
         img_path = match.group(2).strip()
 
-        # Extraer solo el nombre de archivo o ruta relativa
-        # Puede venir como ./imagenes/foto.jpg o imagenes/foto.jpg o solo foto.jpg
-        clean_path = img_path.lstrip("./")
-        filename = Path(clean_path).name
+        # Resolver la ruta en disco (puede ser relativa a imagenes/ o a la raíz del repositorio)
+        rel_path = img_path.lstrip("./")
+        file_on_disk = BASE_DIR / rel_path
+        if not file_on_disk.is_file():
+            # Intentar también directamente dentro de IMAGES_DIR por nombre de archivo
+            filename = Path(rel_path).name
+            file_on_disk = IMAGES_DIR / filename
+            target_src = f"imagenes/{filename}"
+        else:
+            target_src = rel_path
 
-        file_on_disk = IMAGES_DIR / filename
         if file_on_disk.is_file() and file_on_disk.suffix.lower() in VALID_EXTENSIONS:
             items.append({
-                "src": f"imagenes/{filename}",
-                "alt": alt_text or Path(filename).stem.replace("-", " ").replace("_", " ").title()
+                "src": target_src,
+                "alt": alt_text or file_on_disk.stem.replace("-", " ").replace("_", " ").title()
             })
         else:
-            print(f"Aviso: archivo referenciado en imagenes.md no encontrado o no válido: {filename}")
+            print(f"Aviso: archivo referenciado en imagenes.md no encontrado o no válido: {img_path}")
 
     return items
 
@@ -58,7 +64,7 @@ def get_image_files_fallback():
         if f.is_file() and f.suffix.lower() in VALID_EXTENSIONS and not f.name.startswith(".")
     ]
     items = []
-    for f in sorted(files):
+    for f in files:
         alt = Path(f).stem.replace("-", " ").replace("_", " ").title()
         items.append({"src": f"imagenes/{f}", "alt": alt})
     return items
@@ -82,6 +88,8 @@ def update_index_html():
     images = parse_images_from_md()
     if images is None:
         images = get_image_files_fallback()
+
+    random.shuffle(images)
 
     new_images_html = build_images_html(images)
 
