@@ -1,5 +1,23 @@
 # imagen-elixir
 
+## Instrucciones: Actualizar el mosaico web
+
+Para actualizar las imágenes desplegadas en [index.html](./index.html):
+
+1. Edita el archivo [imagenes.md](./imagenes.md) agregando, quitando o comentando las imágenes que deseas mostrar.
+   - Las imágenes deben estar en la carpeta `./imagenes/`.
+   - El texto alternativo entre corchetes `![descripción](./imagenes/archivo.ext)` se usará como pie de foto en el modal.
+   - Para ocultar una imagen sin borrarla, coméntala usando `<!-- ![...](./imagenes/archivo.ext) -->`.
+2. Ejecuta el script de actualización en la terminal:
+
+```bash
+python3 grid-update.py
+```
+
+El script leerá [imagenes.md](./imagenes.md), ignorará las comentadas y regenerará automáticamente el mosaico en [index.html](./index.html).
+
+---
+
 bitácora del curso dictado por cynthia shuffer en doctorado artes y humanidades: "una imagen, tal vez. genealogías críticas fuera de norma".
 
 ## Encargo 1 (24 de agosto)
@@ -88,4 +106,8 @@ Próxima semana: intentar entrar a algo más opaco, algo más difícil. Para que
 
 El hombre “desconoce que el medio es también el masaje; que, juegos de palabras aparte, literalmente trabaja, satura, moldea y transforma todas las relaciones de los sentidos. El contenido o mensaje de cualquier medio particular tiene tanta importancia como un grabado en la cubierta de una bomba atómica”.
 
-https://www.scientificamerican.com/article/deception-in-the-animal-kingdom/
+<https://www.scientificamerican.com/article/deception-in-the-animal-kingdom/>
+
+Lugar conflictivo: el lugar de sujeto humano, su subjetividad, su imaginación, su agencia y su campo de posibilidad.
+
+En mi investigación, mi búsqueda 

@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.mosaic {
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  gap: 2px;
+  background-color: #000;
+}
+
+.mosaic img {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.mosaic img:hover {
+  opacity: 0.85;
+}
+
+/* Modal al hacer click en una imagen */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  cursor: zoom-out;
+  padding: 24px;
+}
+
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 95vw;
+  max-height: 95vh;
+  margin: 0;
+}
+
+.modal-figure img {
+  max-width: 90vw;
+  max-height: calc(90vh - 70px);
+  object-fit: contain;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: default;
+}
+
+.modal-figure figcaption {
+  margin-top: 14px;
+  max-width: 800px;
+  padding: 8px 16px;
+  color: #e0e0e0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  text-align: center;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  background-color: rgba(20, 20, 20, 0.75);
+  border-radius: 4px;
+  cursor: default;
+}
+
+

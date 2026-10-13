@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mosaic" id="mosaic">
+    <img src="imagenes/detalle-delicias.png" alt="Detalle de El jardín de las delicias, de El Bosco: figuras humanas y animales ocupan un paisaje fantástico y exuberante, entre plantas y formas naturales. La escena, densa y onírica, transmite extrañeza.">
+    <img src="imagenes/faraday.jpg" alt="Michael Faraday realiza una demostración ante un público numeroso en una sala de conferencias victoriana. Los asistentes rodean una mesa con instrumentos y observan en silencio; la escena transmite expectación.">
+    <img src="imagenes/mago.jpg" alt="Carta del tarot Rider-Waite con el número romano I: un mago vestido con túnica roja alza una vara junto a una mesa con herramientas, enmarcado por flores sobre fondo amarillo. Sobre su cabeza aparece el símbolo del infinito. En la parte inferior se lee THE MAGICIAN. La escena tiene un tono simbólico y mágico.">
+    <img src="imagenes/russolo.png" alt="Instrumentos experimentales de ruido construidos por Luigi Russolo para El arte de los ruidos, de 1913; una colección de máquinas sonoras concebidas para producir nuevos sonidos.">
+    <img src="imagenes/texto.png" alt="Fragmento impreso de El arte de los ruidos, de Luigi Russolo, con texto dedicado a las ideas de su manifiesto sobre el ruido y la música.">
+  </div>
+
+  <div class="modal" id="modal">
+    <figure class="modal-figure">
+      <img id="modal-img" src="" alt="">
+      <figcaption id="modal-caption"></figcaption>
+    </figure>
+  </div>
+
+  <script>
+    function updateMosaic() {
+      const mosaic = document.getElementById('mosaic');
+      if (!mosaic) return;
+
+      const items = Array.from(mosaic.querySelectorAll('img'));
+      const count = items.length;
+      if (!count) return;
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      // Find the optimal number of columns and rows to fill the screen
+      // targeting a balanced cell aspect ratio (~1.2 - 1.4)
+      let bestCols = 1;
+      let bestRows = count;
+      let bestScore = Infinity;
+      const targetAspect = 1.33;
+
+      for (let cols = 1; cols <= count; cols++) {
+        const rows = Math.ceil(count / cols);
+        const cellW = w / cols;
+        const cellH = h / rows;
+        const aspect = cellW / cellH;
+
+        // Balance aspect ratio close to target and minimize empty slots
+        const aspectScore = Math.abs(Math.log(aspect / targetAspect));
+        const emptySlots = (cols * rows) - count;
+        const emptyScore = (emptySlots / count) * 0.4;
+        const score = aspectScore + emptyScore;
+
+        if (score < bestScore) {
+          bestScore = score;
+          bestCols = cols;
+          bestRows = rows;
+        }
+      }
+
+      mosaic.style.gridTemplateColumns = `repeat(${bestCols}, minmax(0, 1fr))`;
+      mosaic.style.gridTemplateRows = `repeat(${bestRows}, minmax(0, 1fr))`;
+
+      // Reset spans for all items
+      items.forEach(item => {
+        item.style.gridColumn = '';
+      });
+
+      // Distribute any remainder across the last row items so every column is filled
+      const lastRowCount = count - (bestRows - 1) * bestCols;
+      if (lastRowCount > 0 && lastRowCount < bestCols) {
+        const baseSpan = Math.floor(bestCols / lastRowCount);
+        const remainder = bestCols % lastRowCount;
+        const startIndex = (bestRows - 1) * bestCols;
+
+        for (let i = 0; i < lastRowCount; i++) {
+          const item = items[startIndex + i];
+          if (item) {
+            const span = baseSpan + (i < remainder ? 1 : 0);
+            if (span > 1) {
+              item.style.gridColumn = `span ${span}`;
+            }
+          }
+        }
+      }
+    }
+
+    // Auto-update on resize
+    window.addEventListener('resize', updateMosaic);
+
+    // Auto-update when DOM is ready
+    window.addEventListener('DOMContentLoaded', updateMosaic);
+
+    // Auto-update if images are dynamically added or removed
+    const observer = new MutationObserver(updateMosaic);
+    const mosaicEl = document.getElementById('mosaic');
+    if (mosaicEl) {
+      observer.observe(mosaicEl, { childList: true });
+    }
+
+    // Modal interactions
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalCaption = document.getElementById('modal-caption');
+
+    if (mosaicEl && modal && modalImg) {
+      mosaicEl.addEventListener('click', (e) => {
+        const targetImg = e.target.closest('img');
+        if (targetImg) {
+          modalImg.src = targetImg.src;
+          modalImg.alt = targetImg.alt || '';
+          if (modalCaption) {
+            modalCaption.textContent = targetImg.alt || '';
+            modalCaption.style.display = targetImg.alt ? 'block' : 'none';
+          }
+          modal.classList.add('active');
+        }
+      });
+
+      modal.addEventListener('click', () => {
+        modal.classList.remove('active');
+        modalImg.src = '';
+        if (modalCaption) modalCaption.textContent = '';
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+          modal.classList.remove('active');
+          modalImg.src = '';
+          if (modalCaption) modalCaption.textContent = '';
+        }
+      });
+    }
+
+    updateMosaic();
+  </script>
+</body>
+</html>
