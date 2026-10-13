@@ -1,5 +1,9 @@
 # Bitácora
 
+Bitácora del curso dictado por Cynthia Shuffer en Doctorado Artes y Humanidades: "una imagen, tal vez. genealogías críticas fuera de norma".
+
+web con ejercicios de imágenes disponible en [https://misaaaaaa.github.io/imagen-talvez/](https://misaaaaaa.github.io/imagen-talvez/)
+
 ## Encargo 1 (24 de agosto)
 
 *Comentar problema de investigación. Describir el problema desde los bordes hacia afuera. Todo lo que no es el centro del problema. Se puede problematizar la noción de borde. Buscar palabras sin separabilidad, tratar el objeto de manera fuzzy, distinguir el entramado que rodea al objeto. Ejemplos: Si investigo flores, fijarme en raíces, si investigo cuerpo, pensar el suelo*
@@ -92,4 +96,31 @@ Lugar conflictivo: el lugar de sujeto humano, su subjetividad, su imaginación, 
 
 ## Avances 12 de octubre
 
-En mi investigación, mi búsqueda 
+En mi investigación, mi búsqueda se ha dirigido hacia la construcción de un marco para lidiar con el concepto de naturaleza inspirado en el pensamiento sonoro (un sonido está hecho de una relación, es efímero, y no se encuentra en ninguna parte). ¿Podríamos construir un concepto de naturaleza que converse con esa noción, en vez de la búsqueda de sustancias fundamentales, de leyes universales, de encontrar orígenes? Si algo es posible sonoramente (metáfora del árbol caído), es porque hay una naturaleza que lo permite.
+
+Ahora bien, de manera provocativa, podemos desviar el enfoque desde lo sonoro, e intentar rodear el problema del status de la naturaleza. Por ejemplo, a partir de la imagen de El Mago del tarot. Antes de indagar en esta figura, me gustaría rodear el asunto de la naturaleza.
+
+Se ha pensado, al menos en buena parte del sentido común occidental (y no me refiero a la tradición académica que ha promovido este pensamiento, sino al sentido común que encontramos en la subjetividad del sujeto productivo moderno), que hay dos cosas fuera de la naturaleza: el pensamiento, y el artificio. En el sentido común, pensamos a la naturaleza como concepto para hablar de algo: 
+
+1. [esencial], como pensar *la naturaleza de x es y*, 
+2. [singular], con la naturaleza como una cosa de afuera, unívoca y separada de lo humano,
+3. [libre de intervención humana], y por ende
+4. [buena] cuando se mantiene virgen, como si hubiese noción de ética unívoca en ella. Según qué creencia, también se puede considerar de origen
+5. [divino], o algo que necesariamente debió haber sido pensado y creado por un ente trascendental, y finalmente
+6. [intuitiva], que se mueve de manera casi mecanicista, al contrario nuestro.
+
+Ante estas 6 nociones, un sujeto sensible, imaginativo, pensante y que opere por medio de artefactos parecería un ser *alien*: un mutante, multiforme, disruptor, promotor del mal, a la vez terrenal, y de fines maquiavélicos.
+
+Volviendo a la figura del mago, opera en la ficción arquetípica como un sujeto que parece ser capaz comunicar ambos mundos (divino y terrenal), actuando en nuestra realidad material con aparentes poderes sobrenaturales. Este personaje ha sido representado en la cultura popular tanto como un agente a veces *virtuoso* (Gandalf en LOTR) y a veces como uno *vicioso* (Saruman). La alteración de la realidad opera como un canal desde su imaginación, y por medio de artefactos es capaz de construir o destruir objetos, manipular mentes, dividir cuerpos, controlar animales. La noción de manipulación material parece ser la principal cualidad, y que según su capacidad prestidigitadora, puede ser más o menos opaco su truco. Porque finalmente, siempre hay uno. Un mago no es un agente más allá de la naturaleza, es uno que convive con ella, y que es capaz de conocer algunas de sus posibilidades de manera más profunda que el resto. 
+
+En la ficción o la literatura fantástica, vemos magos conversando con animales o reviviendo muertos. Parece ser que en esos planos existenciales, lo que estos agentes hacen es siempre posible dentro de su universo. Y he ahí una hipótesis: si es posible, es real, tanto para un mago, como para la naturaleza que disponibiliza esa situación.
+
+En nuestro plano de realidad, podemos encontrar ejemplos de como la operación con artefactos permite hacer parecer fenómenos sobrenaturales, promotores de experiencia de asombro. Véase la imagen de Faraday (con una actitud similar a la del mago) frente a un auditorio presentando sus descubrimientos que amarrarían la aparente separación entre los fenómenos eléctricos y magnéticos. 
+
+ej: herón de alejandría y sus máquinas de vapor que él decía que estaban hechas para el asombro (Tybjerg, 2003)
+
+seguir: mencionar la distancia entre el mago que transforma la realidad, a veces para aclararla, a veces para opacarla
+
+quizá acciones de hackers
+
+muy bueno este texto de teología sobre herejes <https://www.mercaba.es/teologia/herejias_X_de_hipolito.htm>. En el libro IV: Book IV details and seeks to refute the various beliefs and practices of various diviners and magicians, i.e., the Chaldeans, the Metoposcopists, the Magicians, and those who practice divination by astronomy. This book closed with a perceived explanation of the connection between the Gnostic heresies of Valentinus and Simon Magus and certain ideas ascribed to Pythagoras, thus linking discussion of Greek philosophy in Book I with later arguments against Gnosticism.
