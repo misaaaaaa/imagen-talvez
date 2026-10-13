@@ -126,3 +126,5 @@ seguir: mencionar la distancia entre el mago que transforma la realidad, a veces
 quizá acciones de hackers
 
 muy bueno este texto de teología sobre herejes <https://www.mercaba.es/teologia/herejias_X_de_hipolito.htm>. En el libro IV: Book IV details and seeks to refute the various beliefs and practices of various diviners and magicians, i.e., the Chaldeans, the Metoposcopists, the Magicians, and those who practice divination by astronomy. This book closed with a perceived explanation of the connection between the Gnostic heresies of Valentinus and Simon Magus and certain ideas ascribed to Pythagoras, thus linking discussion of Greek philosophy in Book I with later arguments against Gnosticism.
+
+https://books.google.cl/books/about/A_Wicked_Pack_of_Cards.html?id=MG6DAAAAMAAJ&redir_esc=y

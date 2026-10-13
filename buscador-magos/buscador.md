@@ -8,7 +8,7 @@ Uso previsto: contextos académicos (trabajos, presentaciones, tesis, material d
 
 ### 1.1 "Mago" es ambiguo: delimitación y exclusión de cultura popular
 
-> ⚠️ **Criterio de exclusión clave:** No interesan los magos de la cultura popular contemporánea, franquicias comerciales ni fantasía moderna (p. ej., Harry Potter, Gandalf / *El Señor de los Anillos*, Dungeons & Dragons, cómics, videojuegos, cine reciente). La búsqueda debe centrarse exclusivamente en perspectivas históricas, documentales, mítico-literarias clásicas, artísticas, antropológicas y del ilusionismo escénico histórico.
+> ⚠️ **Criterio de exclusión clave:** No interesan los magos de la cultura popular contemporánea, franquicias comerciales ni fantasía moderna (p. ej., Harry Potter, Gandalf / *El Señor de los Anillos*, Dungeons & Dragons, cómics, videojuegos, cine reciente). La búsqueda debe centrarse exclusivamente en perspectivas históricas, documentales, mítico-literarias clásicas, artísticas, antropológicas y del ilusionismo escénico histórico. Tampoco incluyas más a Houdini o magos del espectáculo del Siglo XX, tardío Siglo XIX.
 
 La palabra cubre figuras distintas a lo largo de la historia, y cada una tiene su propio vocabulario visual. Define cuál necesitas dentro de este enfoque documental e histórico:
 
