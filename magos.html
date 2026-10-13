@@ -50,7 +50,7 @@
     async function loadMarkdown() {
       const container = document.getElementById('content');
       try {
-        const response = await fetch('./buscador-magos/mago-imagenes.md');
+        const response = await fetch(`./buscador-magos/mago-imagenes.md?t=${Date.now()}`);
         if (!response.ok) {
           throw new Error(`HTTP error ${response.status}`);
         }
