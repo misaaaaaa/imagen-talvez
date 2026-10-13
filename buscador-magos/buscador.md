@@ -13,7 +13,7 @@ Uso previsto: contextos académicos (trabajos, presentaciones, tesis, material d
 La palabra cubre figuras distintas a lo largo de la historia, y cada una tiene su propio vocabulario visual. Define cuál necesitas dentro de este enfoque documental e histórico:
 
 | Sentido de "mago" (histórico / documental) | Qué abarca | Términos de búsqueda sugeridos |
-|---|---|---|
+| --- | --- | --- |
 | Magia ritual / brujería clásica | Hechicería histórica, grimorios, círculos mágicos | `sorcerer`, `necromancer`, `hechicero`, `witchcraft` |
 | Ilusionista / prestidigitador histórico | Trucos callejeros, cartelería de teatro y vodevil (s. XV–inicios s. XX) | `magician`, `conjurer`, `illusionist`, `prestidigitador`, `escamoteur` |
 | Reyes Magos (Biblia / Antigüedad tardía) | Sacerdotes-astrónomos orientales, ofrenda | `Magi`, `Three Kings`, `Adoration of the Magi`, `Reyes Magos` |
@@ -42,6 +42,7 @@ Para "mago" esto importa doblemente: además del impedimento legal (gran parte d
 ### A. Agregadores (una sola búsqueda, muchas fuentes)
 
 #### Openverse
+
 - Web: https://openverse.org
 - Cómo buscar: escribe `wizard` → en **Filtros → Licencias** marca **"Dominio público"** (CC0 y Public Domain Mark).
 - API: `https://api.openverse.org/v1/images/?q=wizard&license=cc0,pdm`
@@ -54,10 +55,12 @@ Para "mago" esto importa doblemente: además del impedimento legal (gran parte d
 - API: requiere clave gratuita.
 
 #### Digital Public Library of America (DPLA)
+
 - Web: https://dp.la
 - Cómo buscar: `wizard` o `magician` → revisa el campo **"Rights"** de cada ítem.
 
 #### Wikimedia Commons
+
 - Web: https://commons.wikimedia.org
 - Cómo buscar: `wizard`, `magician`, o navega por categorías (`Category:Wizards`, `Category:Magicians`, `Category:Adoration of the Magi`).
 - Ejemplo de búsqueda: `wizard incategory:"Public domain"` o revisa la plantilla de licencia en cada archivo.
@@ -66,11 +69,13 @@ Para "mago" esto importa doblemente: además del impedimento legal (gran parte d
 ### B. Museos con acceso abierto (CC0 / dominio público)
 
 #### The Metropolitan Museum of Art
+
 - Web: https://www.metmuseum.org/art/collection/search → marca **"Open Access"**.
 - API (sin clave): `https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=wizard`
 - Buen punto de partida para: arte europeo, escenas de Reyes Magos, grabados.
 
 #### Art Institute of Chicago
+
 - Web: https://www.artic.edu/collection → filtra **"Public Domain"**.
 - API: `https://api.artic.edu/api/v1/artworks/search?q=wizard&query[term][is_public_domain]=true`
 
