@@ -77,7 +77,8 @@ def build_images_html(items):
     lines = []
     for item in items:
         safe_alt = html.escape(item["alt"], quote=True)
-        lines.append(f'    <img src="{item["src"]}" alt="{safe_alt}">')
+        featured = ' class="featured"' if item["src"] == "imagenes/mago.jpg" else ""
+        lines.append(f'    <img src="{item["src"]}" alt="{safe_alt}"{featured}>')
     return "\n".join(lines)
 
 

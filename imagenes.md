@@ -1,6 +1,6 @@
 # Imágenes
 
-![Detalle de El jardín de las delicias, de El Bosco. Dos orejas atravesadas por lanzas, emerge de ellas un cuchillo, a la defensiva](./imagenes/detalle-delicias.png)
+<!--![Detalle de El jardín de las delicias, de El Bosco. Dos orejas atravesadas por lanzas, emerge de ellas un cuchillo, a la defensiva](./imagenes/detalle-delicias.png)-->
 
 ![Michael Faraday realiza una demostración ante un público numeroso en una sala de conferencias victoriana.](./imagenes/faraday.jpg)
 
@@ -10,9 +10,9 @@
 
 ![Instrumentos experimentales de ruido construidos por Luigi Russolo para El arte de los ruidos, de 1913; una colección de máquinas sonoras concebidas para producir nuevos sonidos.](./imagenes/russolo.png)
 
-![Fragmento impreso de El arte de los ruidos, de Luigi Russolo, con texto dedicado a las ideas de su manifiesto sobre el ruido y la música.](./imagenes/texto.png)
+<!--![Fragmento impreso de El arte de los ruidos, de Luigi Russolo, con texto dedicado a las ideas de su manifiesto sobre el ruido y la música.](./imagenes/texto.png)-->
 
-![Joseph Benoît Suvée, The Invention of the Art of Drawing, ca. 1791. "George Didi-Huberman has demonstrated how these secular images of representation have a predecessor in Christian icons known as acheiropoieton (made without hands), like the Manoppelo Image and the Holy Shroud of Turin, miraculously emblazoned with the face of Jesus Christ, as if his shadow could leave a stain. “What has touched the god often becomes untouchable par excellence”, he writes, “it withdraws into the shadow of the mystery (and is constituted forever as an object of desire).” https://publicdomainreview.org/collection/origins-of-painting/](./imagenes/benoit.webp)
+<!--![Joseph Benoît Suvée, The Invention of the Art of Drawing, ca. 1791. "George Didi-Huberman has demonstrated how these secular images of representation have a predecessor in Christian icons known as acheiropoieton (made without hands), like the Manoppelo Image and the Holy Shroud of Turin, miraculously emblazoned with the face of Jesus Christ, as if his shadow could leave a stain. “What has touched the god often becomes untouchable par excellence”, he writes, “it withdraws into the shadow of the mystery (and is constituted forever as an object of desire).” https://publicdomainreview.org/collection/origins-of-painting/](./imagenes/benoit.webp)-->
 
 ![Marie Høeg and Bolette Berg in their home, ca. 1895–1903. For many years, Berg and Høeg ran a successful studio in the naval port of Horten, selling photographs to tourists and travelers, before moving the business to Oslo (then Kristiania) and expanding their remit, publishing postcards, magazines, and reproductions of fine art. When not posing or photographing, they organized on behalf of women. https://publicdomainreview.org/collection/berg-and-hoeg/](./imagenes/berg-hoeg.webp)
 
