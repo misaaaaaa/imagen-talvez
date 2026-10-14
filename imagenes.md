@@ -86,3 +86,8 @@
 
 ![Master of the E-Series Tarocchi (Italian, active 1460s), Astrology (from the Tarocchi, series C: Liberal Arts, #29), before 1467. engraving, hand-colored with gold. Cleveland Museum of Art, registro 1924.432.29. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1924.432.29](./magos-img/94-mago-astrology-from-the-tarocchi-series-c-liberal-arts-29-master-of-the-e-series-tarocchi.jpg)
 
+![Juan Downey Juan Downey in his studio on East 20th Street. (Courtesy Bermudez) https://observer.com/2012/04/artist-as-explorer-with-video-camera-juan-downey-the-invisible-architect-at-the-bronx-museum/](./imagenes/juandowney.jpg)
+
+![Jehan-Georges Vibert (French, 1840–1902), Study for the Magician in "Conte de Fée" (Story of a Fairy), siglo XIX. Tinta y aguada. Cleveland Museum of Art, registro 2010.172. CC0. https://clevelandart.org/art/2010.172](./magos-img/106-jehan-georges-vibert-study-magician-conte-de-fee.jpg)
+
+![Gottfrid Svartholm, one of the co-founders of the pirate bay website, at his work station ](./imagenes/gottfrid.webp)

@@ -117,14 +117,18 @@ En la ficción o la literatura fantástica, vemos magos conversando con animales
 
 En nuestro plano de realidad, podemos encontrar ejemplos de como la operación con artefactos permite hacer parecer fenómenos sobrenaturales, promotores de experiencia de asombro. Véase la imagen de Faraday (con una actitud similar a la del mago) frente a un auditorio presentando sus descubrimientos que amarrarían la aparente separación entre los fenómenos eléctricos y magnéticos. 
 
-ej: herón de alejandría y sus máquinas de vapor que él decía que estaban hechas para el asombro (Tybjerg, 2003)
+Hay relaciones curiosas entre magia, hechicería, asombro y ciencia. Comentarios divulgativos más actuales suelen llamar como El Mago a "Herón de Alejandría", quien en su época se dedicaba a la construcción de máquinas de vapor. Se comenta que su objetivo era el de producir asombro, no la demostración ni de fuerzas ocultas, ni la de crear máquinas con utilidades específicas. (Tybjerg, 2003)
 
-ej: simón el mago como transgresor de la orden divina y apedreado
+En la biblia, la figura del mago se considera a través de "Simón el Mago" como un transgresor de la orden divina, y existen imágenes donde se le ve en el suelo y apedreado luego de que Pedro y Pablo lo acusaran al creador de ejercer poderes para los cuales no estaba facultado.
 
-seguir: mencionar la distancia entre el mago que transforma la realidad, a veces para aclararla, a veces para opacarla
+El mago parece también ser una figura con una relación extraña con la didáctica de la realidad. Si bien Herón de Alejandría creaba sus máquinas con fines pedagógicos y de descubrimiento de los principios de la naturaleza, los que documentó muy bien en textos como _Pneumática_, siglos más tarde encontramos en la figura de "El Bagatto", precursor de la carta del Mago de Raider Waite, como un prestidigitador, un timador capaz de presentar ante una audiencia toda clase de trucos con los materiales, que si bien juegan con el asombro, es también símbolo de un personaje manipulador, charlatán y timador. En este punto de la historia su figura es la de un opacador de la realidad, que manipula la mente de quienes no están entrenados en las artes del movimiento de las manos y las materiales. 
 
-quizá acciones de hackers
+TODO quizá acciones de hackers
+
+OTRAS COSITAS
 
 muy bueno este texto de teología sobre herejes <https://www.mercaba.es/teologia/herejias_X_de_hipolito.htm>. En el libro IV: Book IV details and seeks to refute the various beliefs and practices of various diviners and magicians, i.e., the Chaldeans, the Metoposcopists, the Magicians, and those who practice divination by astronomy. This book closed with a perceived explanation of the connection between the Gnostic heresies of Valentinus and Simon Magus and certain ideas ascribed to Pythagoras, thus linking discussion of Greek philosophy in Book I with later arguments against Gnosticism.
 
 https://books.google.cl/books/about/A_Wicked_Pack_of_Cards.html?id=MG6DAAAAMAAJ&redir_esc=y
+
+Manifiesto de Juan Downey

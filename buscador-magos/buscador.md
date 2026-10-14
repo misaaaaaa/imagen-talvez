@@ -8,7 +8,7 @@ Uso previsto: contextos académicos (trabajos, presentaciones, tesis, material d
 
 ### 1.1 "Mago" es ambiguo: delimitación y exclusión de cultura popular
 
-> ⚠️ **Criterio de exclusión clave:** No interesan los magos de la cultura popular contemporánea, franquicias comerciales ni fantasía moderna (p. ej., Harry Potter, Gandalf / *El Señor de los Anillos*, Dungeons & Dragons, cómics, videojuegos, cine reciente). La búsqueda debe centrarse exclusivamente en perspectivas históricas, documentales, mítico-literarias clásicas, artísticas, antropológicas y del ilusionismo escénico histórico. Tampoco incluyas más a Houdini o magos del espectáculo del Siglo XX, tardío Siglo XIX.
+> ⚠️ **Criterios de exclusión clave:** No interesan los magos de la cultura popular contemporánea, franquicias comerciales ni fantasía moderna (p. ej., Harry Potter, Gandalf / *El Señor de los Anillos*, Dungeons & Dragons, cómics, videojuegos, cine reciente). Excluye también las representaciones bíblicas de los Reyes Magos: la Adoración de los Magos, la Epifanía y los tres Reyes. La búsqueda debe centrarse en otras perspectivas históricas, documentales, mítico-literarias clásicas, artísticas, antropológicas y del ilusionismo escénico histórico. Tampoco incluyas a Houdini ni magos del espectáculo del siglo XX o de finales del XIX.
 
 La palabra cubre figuras distintas a lo largo de la historia, y cada una tiene su propio vocabulario visual. Define cuál necesitas dentro de este enfoque documental e histórico:
 
@@ -16,15 +16,16 @@ La palabra cubre figuras distintas a lo largo de la historia, y cada una tiene s
 | --- | --- | --- |
 | Magia ritual / brujería clásica | Hechicería histórica, grimorios, círculos mágicos | `sorcerer`, `necromancer`, `hechicero`, `witchcraft` |
 | Ilusionista / prestidigitador histórico | Trucos callejeros, cartelería de teatro y vodevil (s. XV–inicios s. XX) | `magician`, `conjurer`, `illusionist`, `prestidigitador`, `escamoteur` |
-| Reyes Magos (Biblia / Antigüedad tardía) | Sacerdotes-astrónomos orientales, ofrenda | `Magi`, `Three Kings`, `Adoration of the Magi`, `Reyes Magos` |
-| Sacerdote persa (zoroastrismo antiguo) | Origen etimológico del término *magus* | `magus`, `magi`, `Zoroastrian priest` |
+| Sacerdote persa (zoroastrismo antiguo) | Origen etimológico del término *magus* | `Zoroastrian priest`, `Zoroastrian magus` |
 | Figuras literarias/míticas canónicas | Arquetipos del folclore y literatura clásica premoderna | `Merlin`, `Merlín`, `Prospero`, `Faust`, `Circe`, `Hermogenes` |
 | Tarot y esoterismo histórico | Arcanos mayores (Marsella, Rider-Waite 1909), hermetismo | `The Magician`, `Le Bateleur`, `El Mago tarot` |
 | Alquimia y ciencias ocultas | Filosofía natural renacentista y barroca | `alchemist`, `alquimista`, `occult`, `philosopher's stone` |
 
+Al revisar resultados, descarta los que traten de los Reyes Magos, la Adoración de los Magos o la Epifanía, aunque aparezcan con etiquetas generales como `magi` o `magus`. Usa exclusiones negativas solo si el buscador las admite; en los demás casos, comprueba el título, la descripción y la ficha de cada obra. No excluyas la palabra `magician` por coincidencias parciales con `magi`.
+
 ### 1.2 Busca en varios idiomas
 
-Los repositorios internacionales indexan sobre todo en inglés, francés, alemán y latín. Si solo buscas "mago" perderás la mayoría de los resultados. Prueba también `magus`, `magicien` (fr), `Zauberer` (de), `mago` (it) y `magus` (latín).
+Los repositorios internacionales indexan sobre todo en inglés, francés, alemán y latín. Si solo buscas "mago" perderás la mayoría de los resultados. Prueba también `magicien` (fr), `Zauberer` (de) y `mago` (it); para el sentido zoroastriano, usa `Zoroastrian priest` o la búsqueda compuesta `Zoroastrian magus`.
 
 ### 1.3 Dominio público ≠ cualquier "gratis"
 
@@ -50,7 +51,7 @@ Para "mago" esto importa doblemente: además del impedimento legal (gran parte d
 
 #### Europeana
 - Web: https://www.europeana.eu/es
-- Cómo buscar: busca `mago` o `magus` → filtros: **Tipo: Imagen** y **Reutilización: "Dominio público"**.
+- Cómo buscar: busca `mago` o `Zoroastrian magus` → filtros: **Tipo: Imagen** y **Reutilización: "Dominio público"**; excluye resultados sobre la Epifanía y los Reyes Magos.
 - Ventaja: interfaz en español y colecciones de bibliotecas y museos europeos (manuscritos iluminados, grabados).
 - API: requiere clave gratuita.
 
@@ -62,7 +63,7 @@ Para "mago" esto importa doblemente: además del impedimento legal (gran parte d
 #### Wikimedia Commons
 
 - Web: https://commons.wikimedia.org
-- Cómo buscar: `wizard`, `magician`, o navega por categorías (`Category:Wizards`, `Category:Magicians`, `Category:Adoration of the Magi`).
+- Cómo buscar: `wizard`, `magician`, o navega por categorías (`Category:Wizards`, `Category:Magicians`). Excluye las categorías de Adoración de los Magos y Epifanía.
 - Ejemplo de búsqueda: `wizard incategory:"Public domain"` o revisa la plantilla de licencia en cada archivo.
 - ⚠️ **Licencias mezcladas.** Es enorme y útil, pero cada archivo tiene su propia licencia: lee la sección "Licencia" de la ficha de cada imagen.
 
@@ -72,7 +73,7 @@ Para "mago" esto importa doblemente: además del impedimento legal (gran parte d
 
 - Web: https://www.metmuseum.org/art/collection/search → marca **"Open Access"**.
 - API (sin clave): `https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&isPublicDomain=true&q=wizard`
-- Buen punto de partida para: arte europeo, escenas de Reyes Magos, grabados.
+- Buen punto de partida para: arte europeo, escenas de hechicería, grabados y alquimia.
 
 #### Art Institute of Chicago
 
@@ -85,7 +86,7 @@ Para "mago" esto importa doblemente: además del impedimento legal (gran parte d
 
 #### Rijksmuseum
 - Web: https://www.rijksmuseum.nl/en/rijksstudio
-- Ventaja: imágenes de alta resolución, muchas de grabados y pintura holandesa (buena para Reyes Magos y alquimistas).
+- Ventaja: imágenes de alta resolución, muchas de grabados y pintura holandesa (buena para alquimistas y escenas de hechicería).
 
 #### Smithsonian Open Access
 - Web: https://www.si.edu/openaccess → filtra por **CC0**.
@@ -113,7 +114,7 @@ Para "mago" esto importa doblemente: además del impedimento legal (gran parte d
 
 #### Biblioteca Digital Hispánica (Biblioteca Nacional de España)
 - Web: https://bdh.bne.es
-- Cómo buscar: `mago`, `hechicero`, `Reyes Magos`. Útil para material en español, aunque **revisa las condiciones de reutilización** de cada documento: no todo está en dominio público.
+- Cómo buscar: `mago` o `hechicero`; excluye los resultados sobre los Reyes Magos, la Adoración de los Magos y la Epifanía. **Revisa las condiciones de reutilización** de cada documento: no todo está en dominio público.
 
 #### Flickr Commons
 - Web: https://www.flickr.com/commons
@@ -170,9 +171,9 @@ Notas (ej. "fotografía de obra del s. XVI; reproducción fiel"):
 
 | Qué buscas | Término | Dónde probar primero |
 |---|---|---|
-| Hechicero medieval | `wizard`, `magus` | Wellcome, Internet Archive, Europeana |
+| Hechicero medieval | `wizard`, `sorcerer` | Wellcome, Internet Archive, Europeana |
 | Mago ilusionista (siglos XIX–XX) | `magician poster` | Library of Congress, NYPL |
-| Reyes Magos | `Adoration of the Magi` | Met, Rijksmuseum, Europeana |
+| Maga clásica / Circe | `Circe sorceress` | Met, Rijksmuseum, Europeana |
 | Merlín / Arturo | `Merlin` | Internet Archive, Wikimedia Commons |
 | Alquimista | `alchemist` | Wellcome, Rijksmuseum, Getty |
 | Carta del tarot | `The Magician tarot` | Wikimedia Commons, Met |

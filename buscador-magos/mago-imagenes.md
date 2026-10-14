@@ -353,3 +353,43 @@ Albrecht Dürer (German, 1471–1528), Melencolia I, 1514. engraving. Cleveland 
 ![Lalu (Indian, active mid-1500s), The monk returns the magic parrot to its rightful owner, the merchant, from a Tuti-nama (Tales of a Parrot): Tenth Night, c. 1560. gum tempera, ink, and gold on paper. Cleveland Museum of Art, registro 1962.279.84.a. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1962.279.84.a](./magos-img/100-mago-the-monk-returns-the-magic-parrot-to-its-rightful-owner-the-merchant-from-a-tuti-nama.jpg)
 
 Lalu (Indian, active mid-1500s), The monk returns the magic parrot to its rightful owner, the merchant, from a Tuti-nama (Tales of a Parrot): Tenth Night, c. 1560. gum tempera, ink, and gold on paper. Cleveland Museum of Art, registro 1962.279.84.a. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1962.279.84.a
+
+![Salvator Rosa (Italian, 1615–1673), Scenes of Witchcraft: Morning, c. 1645–49. Óleo sobre lienzo. Cleveland Museum of Art, registro 1977.37.1. CC0. https://clevelandart.org/art/1977.37.1](./magos-img/101-salvator-rosa-scenes-of-witchcraft-morning.jpg)
+
+Salvator Rosa, Scenes of Witchcraft: Morning, c. 1645–49. La primera escena muestra a una bruja que hiere un anfibio al amanecer, rodeada por un paisaje oscuro y aves amenazantes. Cleveland Museum of Art, registro 1977.37.1. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/1977.37.1
+
+![Salvator Rosa (Italian, 1615–1673), Scenes of Witchcraft: Day, c. 1645–49. Óleo sobre lienzo. Cleveland Museum of Art, registro 1977.37.2. CC0. https://clevelandart.org/art/1977.37.2](./magos-img/102-salvator-rosa-scenes-of-witchcraft-day.jpg)
+
+Salvator Rosa, Scenes of Witchcraft: Day, c. 1645–49. La escena diurna muestra a brujas preparando sus ungüentos y reuniéndose para el sabbat. Cleveland Museum of Art, registro 1977.37.2. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/1977.37.2
+
+![Salvator Rosa (Italian, 1615–1673), Scenes of Witchcraft: Evening, c. 1645–49. Óleo sobre lienzo. Cleveland Museum of Art, registro 1977.37.3. CC0. https://clevelandart.org/art/1977.37.3](./magos-img/103-salvator-rosa-scenes-of-witchcraft-evening.jpg)
+
+Salvator Rosa, Scenes of Witchcraft: Evening, c. 1645–49. Al anochecer, un grupo de brujas se reúne alrededor de un caldero bajo un esqueleto conjurado. Cleveland Museum of Art, registro 1977.37.3. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/1977.37.3
+
+![Philip Galle, según Pieter Bruegel, Alchemist, 1558. Grabado. Cleveland Museum of Art, registro 1964.479. CC0. https://clevelandart.org/art/1964.479](./magos-img/104-philip-galle-pieter-bruegel-alchemist.jpg)
+
+Philip Galle, según Pieter Bruegel, Alchemist, 1558. Grabado de tema alquímico. Cleveland Museum of Art, registro 1964.479. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/1964.479
+
+![Domenico Beccafumi (Italian, 1486–1551), The Alchemical Properties of Metal: Mercury, Vulcan, and the Alchemist in the Cave, 1530s. Xilografía. Cleveland Museum of Art, registro 2010.153. CC0. https://clevelandart.org/art/2010.153](./magos-img/105-domenico-beccafumi-alchemical-properties-of-metal.jpg)
+
+Domenico Beccafumi, The Alchemical Properties of Metal: Mercury, Vulcan, and the Alchemist in the Cave, década de 1530. Xilografía sobre alquimia y propiedades de los metales. Cleveland Museum of Art, registro 2010.153. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/2010.153
+
+![Jehan-Georges Vibert (French, 1840–1902), Study for the Magician in "Conte de Fée" (Story of a Fairy), siglo XIX. Tinta y aguada. Cleveland Museum of Art, registro 2010.172. CC0. https://clevelandart.org/art/2010.172](./magos-img/106-jehan-georges-vibert-study-magician-conte-de-fee.jpg)
+
+Jehan-Georges Vibert, Study for the Magician in "Conte de Fée" (Story of a Fairy), siglo XIX. Estudio a tinta y aguada para la figura del mago. Cleveland Museum of Art, registro 2010.172. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/2010.172
+
+![Henri Fantin-Latour (French, 1836–1904), Witchcraft, 1899. Litografía. Cleveland Museum of Art, registro 1921.68. CC0. https://clevelandart.org/art/1921.68](./magos-img/107-henri-fantin-latour-witchcraft.jpg)
+
+Henri Fantin-Latour, Witchcraft, 1899. Litografía sobre brujería. Cleveland Museum of Art, registro 1921.68. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/1921.68
+
+![Salvator Rosa (Italian, 1615–1673), Glaucus and Scylla, c. 1661. Aguafuerte. Cleveland Museum of Art, registro 1971.176. CC0. https://clevelandart.org/art/1971.176](./magos-img/108-salvator-rosa-glaucus-and-scylla.jpg)
+
+Salvator Rosa, Glaucus and Scylla, c. 1661. Estampa basada en el episodio de las Metamorfosis de Ovidio, asociado a la hechicería y a una transformación provocada por hierbas mágicas. Cleveland Museum of Art, registro 1971.176. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/1971.176
+
+![Jacques Callot (French, 1592–1635), The Stopping Place: The Fortune Teller, c. 1621–25. Aguafuerte y buril. Cleveland Museum of Art, registro 2004.42.c. CC0. https://clevelandart.org/art/2004.42.c](./magos-img/109-jacques-callot-stopping-place-fortune-teller.jpg)
+
+Jacques Callot, The Stopping Place: The Fortune Teller, c. 1621–25. Estampa de una adivina, realizada al aguafuerte y buril. Cleveland Museum of Art, registro 2004.42.c. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/2004.42.c
+
+![Mariano Fortuny (Spanish, 1838–1874), Fortune Teller, 1867. Aguafuerte. Cleveland Museum of Art, registro 1921.287. CC0. https://clevelandart.org/art/1921.287](./magos-img/110-mariano-fortuny-fortune-teller.jpg)
+
+Mariano Fortuny, Fortune Teller, 1867. Estampa de una adivina, realizada al aguafuerte. Cleveland Museum of Art, registro 1921.287. CC0. Consultado el 14-10-2026. https://clevelandart.org/art/1921.287
