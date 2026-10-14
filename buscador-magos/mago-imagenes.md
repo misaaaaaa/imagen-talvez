@@ -275,6 +275,7 @@ Eugène Delacroix (French, 1798–1863), Macbeth Consulting the Witches, 1825. l
 ![Francisco de Goya (Spanish, 1746–1828), They Have Flown, Plate 61, 1799. etching and aquatint. Cleveland Museum of Art, registro 1956.272. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1956.272](./magos-img/75-mago-they-have-flown-plate-61-francisco-de-goya-spanish-17461828.jpg)
 
 Francisco de Goya (Spanish, 1746–1828), They Have Flown, Plate 61, 1799. etching and aquatint. Cleveland Museum of Art, registro 1956.272. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1956.272
+
 ![Hendrick Goltzius (Dutch, 1558–1617), The Deities: Demogorgon in the Cave of Eternity, 1588–90. chiaroscuro woodcut. Cleveland Museum of Art, registro 1952.204. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1952.204](./magos-img/76-mago-the-deities-demogorgon-in-the-cave-of-eternity-hendrick-goltzius-dutch-15581617.jpg)
 
 Hendrick Goltzius (Dutch, 1558–1617), The Deities: Demogorgon in the Cave of Eternity, 1588–90. chiaroscuro woodcut. Cleveland Museum of Art, registro 1952.204. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1952.204
@@ -305,6 +306,7 @@ Eugène Delacroix (French, 1798–1863); Chez Ch. Motte, Éditeur, distributed b
 ![Eugène Delacroix (French, 1798–1863); Chez Ch. Motte, Éditeur, distributed by Chez Sautelet, Libraire, Illustrations for Faust: Méphistophélés in the air, 1828. lithograph. Cleveland Museum of Art, registro 1933.145.2. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1933.145.2](./magos-img/85-mago-illustrations-for-faust-mephistopheles-in-the-air-eugene-delacroix-french-17981863-ch.jpg)
 
 Eugène Delacroix (French, 1798–1863); Chez Ch. Motte, Éditeur, distributed by Chez Sautelet, Libraire, Illustrations for Faust: Méphistophélés in the air, 1828. lithograph. Cleveland Museum of Art, registro 1933.145.2. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1933.145.2
+
 ![Artista desconocido, The magician disguised as a Brahman returns to claim his “daughter-in-law,” from a Tuti-nama (Tales of a Parrot): Thirty-fifth Night, c. 1560. gum tempera, ink, and gold on paper. Cleveland Museum of Art, registro 1962.279.236.a. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1962.279.236.a](./magos-img/86-mago-the-magician-disguised-as-a-brahman-returns-to-claim-his-daughter-in-law-from-a-tuti.jpg)
 
 Artista desconocido, The magician disguised as a Brahman returns to claim his “daughter-in-law,” from a Tuti-nama (Tales of a Parrot): Thirty-fifth Night, c. 1560. gum tempera, ink, and gold on paper. Cleveland Museum of Art, registro 1962.279.236.a. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1962.279.236.a
@@ -323,6 +325,7 @@ Giovanni Battista Tiepolo (Italian, 1696–1770), Scherzi di Fantasia: Seated Ma
 ![Nicolas Delaunay (French, 1739–1792), In the Grotto of Merlin, the Magician, 1771. engraving and etching. Cleveland Museum of Art, registro 1941.133. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1941.133](./magos-img/91-mago-in-the-grotto-of-merlin-the-magician-nicolas-delaunay-french-17391792.jpg)
 
 Nicolas Delaunay (French, 1739–1792), In the Grotto of Merlin, the Magician, 1771. engraving and etching. Cleveland Museum of Art, registro 1941.133. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1941.133
+
 ![Albrecht Altdorfer (German, c. 1480–1538), The Roman Courtesan or The Revenge of the Sorcerer Virgil, 1520–1526. engraving. Cleveland Museum of Art, registro 1946.391. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1946.391](./magos-img/92-mago-the-roman-courtesan-or-the-revenge-of-the-sorcerer-virgil-albrecht-altdorfer-german-c.jpg)
 
 Albrecht Altdorfer (German, c. 1480–1538), The Roman Courtesan or The Revenge of the Sorcerer Virgil, 1520–1526. engraving. Cleveland Museum of Art, registro 1946.391. Dominio público (CC0 1.0), consultado el 13-10-2026. https://clevelandart.org/art/1946.391

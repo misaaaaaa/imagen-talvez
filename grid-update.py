@@ -40,6 +40,9 @@ def parse_images_from_md():
             filename = Path(rel_path).name
             file_on_disk = IMAGES_DIR / filename
             target_src = f"imagenes/{filename}"
+            if not file_on_disk.is_file():
+                file_on_disk = BASE_DIR / "buscador-magos" / "magos-img" / filename
+                target_src = f"buscador-magos/magos-img/{filename}"
         else:
             target_src = rel_path
 
