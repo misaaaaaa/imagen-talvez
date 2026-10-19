@@ -131,4 +131,16 @@ muy bueno este texto de teología sobre herejes <https://www.mercaba.es/teologia
 
 https://books.google.cl/books/about/A_Wicked_Pack_of_Cards.html?id=MG6DAAAAMAAJ&redir_esc=y
 
-Manifiesto de Juan Downey
+TODO: Manifiesto de Juan Downey (relacionado con Herón de Alejandría)
+
+## Palabras para un diagrama
+
+- mago
+- ciencia
+- manipulación
+- hechicero
+- nigromante
+- bruja
+- asombro
+- materiales
+- control mental

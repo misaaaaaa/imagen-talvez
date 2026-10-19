@@ -1,6 +1,8 @@
 # imagen-elixir
 
-bitácora en 
+bitácora en <https://misaaaaaa.github.io/imagen-talvez/bitacora.html>
+
+visualziador en <https://misaaaaaa.github.io/>
 
 ---
 
