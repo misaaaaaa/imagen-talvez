@@ -145,4 +145,3 @@ TODO: Manifiesto de Juan Downey (relacionado con Herón de Alejandría)
 - materiales
 - control mental
 - pedagogía
-
