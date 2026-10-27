@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Constelación</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xyflow/react@12.3.6/dist/style.css">
+  <style>
+    #constelacion {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #constelacion .react-flow {
+      --xy-background-color: transparent;
+      --xy-edge-stroke: #e0e0e0;
+      --xy-edge-stroke-width: 1.5;
+    }
+
+    .controles {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      display: flex;
+      gap: 6px;
+    }
+
+    .controles a,
+    .controles button {
+      padding: 6px 9px;
+      border: 0;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.7);
+      font: 14px/1.2 system-ui, sans-serif;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .controles a:hover,
+    .controles button:hover {
+      text-decoration: underline;
+    }
+
+    .burbuja {
+      position: relative;
+      display: block;
+      padding: 0;
+      border: 2px solid #e0e0e0;
+      border-radius: 50%;
+      background: #000 center / cover no-repeat;
+      cursor: pointer;
+    }
+
+    .burbuja:hover,
+    .burbuja:focus-visible {
+      border-color: #fff;
+      outline: 2px solid #fff;
+      outline-offset: 3px;
+    }
+
+    /* Fuera del flujo para que no altere la medida (y el centro) del nodo. */
+    .burbuja-titulo {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      width: 180px;
+      transform: translateX(-50%);
+      color: #e0e0e0;
+      font: 12px/1.3 system-ui, sans-serif;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .arista-texto {
+      position: absolute;
+      padding: 2px 6px;
+      color: #fff;
+      background: #000;
+      border: 1px solid #555;
+      font: italic 12px/1.2 system-ui, sans-serif;
+      pointer-events: none;
+    }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.3.1",
+      "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@18.3.1?external=react",
+      "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?external=react",
+      "@xyflow/react": "https://esm.sh/@xyflow/react@12.3.6?external=react,react-dom",
+      "htm": "https://esm.sh/htm@3.1.1"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="constelacion"></div>
+
+  <!-- Modal (mismo que en index.html) -->
+  <div class="modal" id="modal">
+    <figure class="modal-figure">
+      <img id="modal-img" src="" alt="">
+      <figcaption id="modal-caption"></figcaption>
+    </figure>
+  </div>
+
+  <script type="module">
+    import { createElement, useState } from "react";
+    import { createRoot } from "react-dom/client";
+    import {
+      ReactFlow,
+      Handle,
+      Position,
+      BaseEdge,
+      EdgeLabelRenderer,
+      MarkerType,
+      useInternalNode,
+      useNodesState,
+    } from "@xyflow/react";
+    import htm from "htm";
+
+    const html = htm.bind(createElement);
+
+    const MUESTRA = 10;
+    const SIZE = 150;
+    const SEPARACION = SIZE + 90;
+    const COLOR = "#e0e0e0";
+
+    // Relaciones de prueba: por ahora se sortean; más adelante podrían venir
+    // de una sección "Conexiones" en un .md, como en marcoteorico.md.
+    const RELACIONES = [
+      "se orienta mediante", "contagia", "se alimentan", "escamotea",
+      "invoca", "imita", "oculta", "revela", "hereda de", "traduce",
+      "encanta", "desvía", "se disfraza de", "conjura", "", "", "",
+    ];
+    const FLECHAS = ["->", "->", "<->", "<-", "--"];
+
+    const azar = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    // Imágenes activas de imagenes.md (ignora las comentadas, igual que grid-update.py).
+    function parsearImagenes(md) {
+      const sinComentarios = md.replace(/<!--[\s\S]*?-->/g, "");
+      return [...sinComentarios.matchAll(/!\[(.*?)\]\((.*?)\)/g)].map(([, alt, src]) => ({
+        alt: alt.trim(),
+        src: src.trim().replace(/^\.\//, ""),
+      }));
+    }
+
+    // Título corto: hasta la primera coma o punto.
+    const titulo = (alt) => {
+      const t = alt.split(/[,.](\s|$)/)[0];
+      return t.length > 60 ? t.slice(0, 57) + "…" : t;
+    };
+
+    function muestra(items, n) {
+      const copia = [...items];
+      for (let i = copia.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copia[i], copia[j]] = [copia[j], copia[i]];
+      }
+      return copia.slice(0, n);
+    }
+
+    // Posiciones aleatorias sin superposición (por el centro de cada burbuja).
+    function posicionesAleatorias(n) {
+      const mitad = Math.max(SEPARACION, Math.sqrt(n) * SEPARACION * 0.8);
+      for (let intento = 0; intento < 200; intento++) {
+        const pts = [];
+        let tope = 0;
+        while (pts.length < n && tope++ < 500) {
+          const p = {
+            x: (Math.random() * 2 - 1) * mitad,
+            y: (Math.random() * 2 - 1) * mitad,
+          };
+          if (pts.every((q) => Math.hypot(p.x - q.x, p.y - q.y) >= SEPARACION))
+            pts.push(p);
+        }
+        if (pts.length === n) return pts;
+      }
+      return Array.from({ length: n }, (_, i) => {
+        const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
+        return { x: Math.cos(a) * 300, y: Math.sin(a) * 300 };
+      });
+    }
+
+    // Cada imagen se une a una anterior (todo queda conectado) y se suman
+    // algunas relaciones extra.
+    function conexionesAleatorias(n) {
+      const pares = [];
+      for (let i = 1; i < n; i++) pares.push([Math.floor(Math.random() * i), i]);
+      const extras = 2 + Math.floor(Math.random() * 3);
+      for (let k = 0, tope = 0; k < extras && tope < 50; tope++) {
+        const a = Math.floor(Math.random() * n);
+        const b = Math.floor(Math.random() * n);
+        if (a === b || pares.some(([x, y]) => (x === a && y === b) || (x === b && y === a))) continue;
+        pares.push([a, b]);
+        k++;
+      }
+      const marca = { type: MarkerType.ArrowClosed, color: COLOR };
+      return pares.map(([a, b], i) => {
+        const flecha = azar(FLECHAS);
+        return {
+          id: a + "-" + b + "-" + i,
+          source: String(a),
+          target: String(b),
+          type: "flotante",
+          label: azar(RELACIONES) || undefined,
+          markerStart: flecha.startsWith("<") ? marca : undefined,
+          markerEnd: flecha.endsWith(">") ? marca : undefined,
+        };
+      });
+    }
+
+    // --- Arista (portada de proyectoD/diagrama/src/Arista.jsx) ---
+
+    function formaAleatoria() {
+      const n = 1 + Math.floor(Math.random() * 2);
+      return Array.from({ length: n }, (_, i) => ({
+        t: (i + 1) / (n + 1),
+        off: (Math.random() * 0.5 - 0.25) * (i % 2 ? -1 : 1),
+      }));
+    }
+
+    // Curva suave (Catmull-Rom convertida a bézier cúbico) por todos los puntos.
+    function curva(p1, p2, forma) {
+      const dx = p2.x - p1.x;
+      const dy = p2.y - p1.y;
+      const d = Math.hypot(dx, dy) || 1;
+      const nx = -dy / d;
+      const ny = dx / d;
+      const pts = [
+        p1,
+        ...forma.map(({ t, off }) => ({
+          x: p1.x + dx * t + nx * off * d,
+          y: p1.y + dy * t + ny * off * d,
+        })),
+        p2,
+      ];
+      const segs = [];
+      for (let i = 0; i < pts.length - 1; i++) {
+        const a = pts[Math.max(i - 1, 0)];
+        const b = pts[i];
+        const c = pts[i + 1];
+        const e = pts[Math.min(i + 2, pts.length - 1)];
+        segs.push([
+          b,
+          { x: b.x + (c.x - a.x) / 6, y: b.y + (c.y - a.y) / 6 },
+          { x: c.x - (e.x - b.x) / 6, y: c.y - (e.y - b.y) / 6 },
+          c,
+        ]);
+      }
+      const path =
+        "M" + p1.x + "," + p1.y +
+        segs.map(([, c1, c2, c]) => " C" + c1.x + "," + c1.y + " " + c2.x + "," + c2.y + " " + c.x + "," + c.y).join("");
+      // Punto medio de la curva: mitad del segmento central.
+      const [b, c1, c2, c] = segs[Math.floor(segs.length / 2)];
+      const u = segs.length % 2 ? 0.5 : 0;
+      const mt = 1 - u;
+      const mid = (k) =>
+        mt ** 3 * b[k] + 3 * mt ** 2 * u * c1[k] + 3 * mt * u ** 2 * c2[k] + u ** 3 * c[k];
+      return [path, mid("x"), mid("y")];
+    }
+
+    // Punto del borde del círculo `nodo` en dirección a `otro`.
+    function borde(nodo, otro) {
+      const centro = (n) => ({
+        x: n.internals.positionAbsolute.x + n.measured.width / 2,
+        y: n.internals.positionAbsolute.y + n.measured.height / 2,
+      });
+      const a = centro(nodo);
+      const b = centro(otro);
+      const r = nodo.measured.width / 2;
+      const d = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+      return { x: a.x + ((b.x - a.x) / d) * r, y: a.y + ((b.y - a.y) / d) * r };
+    }
+
+    function Arista({ id, source, target, markerStart, markerEnd, label }) {
+      const [forma] = useState(formaAleatoria);
+      const s = useInternalNode(source);
+      const t = useInternalNode(target);
+      if (!s?.measured?.width || !t?.measured?.width) return null;
+      const p1 = borde(s, t);
+      const p2 = borde(t, s);
+      const [path, lx, ly] = curva(p1, p2, forma);
+      return html`
+        <${BaseEdge} id=${id} path=${path} markerStart=${markerStart} markerEnd=${markerEnd} />
+        ${label && html`
+          <${EdgeLabelRenderer}>
+            <div
+              className="arista-texto"
+              style=${{ transform: "translate(-50%, -50%) translate(" + lx + "px, " + ly + "px)" }}
+            >${label}</div>
+          <//>
+        `}
+      `;
+    }
+
+    // --- Burbuja con imagen ---
+
+    const oculto = { opacity: 0, top: "50%", left: "50%", pointerEvents: "none" };
+
+    function Burbuja({ data }) {
+      return html`
+        <button
+          type="button"
+          className="burbuja"
+          style=${{ width: data.size, height: data.size, backgroundImage: "url(" + JSON.stringify(data.src) + ")" }}
+          aria-label=${data.alt}
+          onClick=${data.onClick}
+        >
+          <${Handle} type="target" position=${Position.Top} style=${oculto} />
+          <${Handle} type="source" position=${Position.Top} style=${oculto} />
+          <span className="burbuja-titulo">${titulo(data.alt)}</span>
+        </button>
+      `;
+    }
+
+    const nodeTypes = { burbuja: Burbuja };
+    const edgeTypes = { flotante: Arista };
+
+    // Las posiciones se dan por el centro de cada burbuja.
+    function Diagrama({ nodes: iniciales, edges }) {
+      const [nodes, , onNodesChange] = useNodesState(
+        iniciales.map((n) => ({
+          ...n,
+          position: {
+            x: n.position.x - n.data.size / 2,
+            y: n.position.y - n.data.size / 2,
+          },
+        }))
+      );
+      return html`
+        <${ReactFlow}
+          nodes=${nodes}
+          edges=${edges}
+          nodeTypes=${nodeTypes}
+          edgeTypes=${edgeTypes}
+          onNodesChange=${onNodesChange}
+          fitView
+          fitViewOptions=${{ padding: 0.2 }}
+          nodesConnectable=${false}
+          elementsSelectable=${false}
+          proOptions=${{ hideAttribution: true }}
+        />
+      `;
+    }
+
+    // --- Modal ---
+
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modal-img");
+    const modalCaption = document.getElementById("modal-caption");
+
+    function abrir({ src, alt }) {
+      modalImg.src = src;
+      modalImg.alt = alt;
+      modalCaption.textContent = alt;
+      modalCaption.style.display = alt ? "block" : "none";
+      modal.classList.add("active");
+    }
+
+    function cerrar() {
+      modal.classList.remove("active");
+      modalImg.src = "";
+      modalCaption.textContent = "";
+    }
+
+    modal.addEventListener("click", cerrar);
+    document.addEventListener("keydown", (e) => e.key === "Escape" && cerrar());
+
+    // --- Constelación ---
+
+    function sortear(imagenes) {
+      const elegidas = muestra(imagenes, MUESTRA);
+      const posiciones = posicionesAleatorias(elegidas.length);
+      return {
+        nodes: elegidas.map((img, i) => ({
+          id: String(i),
+          type: "burbuja",
+          position: posiciones[i],
+          data: { ...img, size: SIZE, onClick: () => abrir(img) },
+        })),
+        edges: conexionesAleatorias(elegidas.length),
+      };
+    }
+
+    function Constelacion({ imagenes }) {
+      const [n, setN] = useState(0);
+      const [datos, setDatos] = useState(() => sortear(imagenes));
+      const otra = () => {
+        setDatos(sortear(imagenes));
+        setN(n + 1);
+      };
+      return html`
+        <nav className="controles">
+          <a href="index.html">Mosaico</a>
+          <a href="bitacora.html">Bitácora</a>
+          <button type="button" onClick=${otra}>Otra constelación</button>
+        </nav>
+        <${Diagrama} key=${n} nodes=${datos.nodes} edges=${datos.edges} />
+      `;
+    }
+
+    const md = await fetch("imagenes.md").then((r) => r.text());
+    createRoot(document.getElementById("constelacion")).render(
+      html`<${Constelacion} imagenes=${parsearImagenes(md)} />`
+    );
+  </script>
+</body>
+</html>
