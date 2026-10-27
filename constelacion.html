@@ -75,6 +75,7 @@
 
     .arista-texto {
       position: absolute;
+      z-index: 1000; /* sobre las burbujas */
       padding: 2px 6px;
       color: #fff;
       background: #000;
@@ -91,7 +92,8 @@
       "react-dom": "https://esm.sh/react-dom@18.3.1?external=react",
       "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?external=react",
       "@xyflow/react": "https://esm.sh/@xyflow/react@12.3.6?external=react,react-dom",
-      "htm": "https://esm.sh/htm@3.1.1"
+      "htm": "https://esm.sh/htm@3.1.1",
+      "marked": "https://esm.sh/marked@15.0.12"
     }
   }
   </script>
@@ -121,47 +123,73 @@
       useNodesState,
     } from "@xyflow/react";
     import htm from "htm";
+    import { marked } from "marked";
 
     const html = htm.bind(createElement);
 
-    const MUESTRA = 10;
     const SIZE = 150;
     const SEPARACION = SIZE + 90;
     const COLOR = "#e0e0e0";
 
-    // Relaciones de prueba: por ahora se sortean; más adelante podrían venir
-    // de una sección "Conexiones" en un .md, como en marcoteorico.md.
-    const RELACIONES = [
-      "se orienta mediante", "contagia", "se alimentan", "escamotea",
-      "invoca", "imita", "oculta", "revela", "hereda de", "traduce",
-      "encanta", "desvía", "se disfraza de", "conjura", "", "", "",
-    ];
-    const FLECHAS = ["->", "->", "<->", "<-", "--"];
+    const norm = (t) =>
+      t.normalize("NFD").replace(/[̀-ͯ]/g, "").trim().toLowerCase();
 
-    const azar = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-    // Imágenes activas de imagenes.md (ignora las comentadas, igual que grid-update.py).
-    function parsearImagenes(md) {
-      const sinComentarios = md.replace(/<!--[\s\S]*?-->/g, "");
-      return [...sinComentarios.matchAll(/!\[(.*?)\]\((.*?)\)/g)].map(([, alt, src]) => ({
-        alt: alt.trim(),
-        src: src.trim().replace(/^\.\//, ""),
-      }));
+    // Líneas de la sección "Conexiones": "A -> B : texto", "A <-> B", "A <- B", "A -- B".
+    function parsearConexiones(cuerpo, items) {
+      const porNombre = new Map(items.map((it, i) => [norm(it.titulo), i]));
+      const edges = [];
+      for (const linea of cuerpo.split("\n")) {
+        const m = linea
+          .replace(/^\s*[-*+]\s+/, "")
+          .match(/^(.+?)\s*(<->|->|<-|--)\s*(.+?)(?:\s*:\s*(.+))?$/);
+        if (!m) continue;
+        const [, a, flecha, b, texto] = m;
+        const x = porNombre.get(norm(a));
+        const y = porNombre.get(norm(b));
+        if (x === undefined || y === undefined) {
+          console.warn("Conexión con nombre desconocido:", linea);
+          continue;
+        }
+        const marca = { type: MarkerType.ArrowClosed, color: COLOR };
+        edges.push({
+          id: x + "-" + y + "-" + edges.length,
+          source: String(x),
+          target: String(y),
+          type: "flotante",
+          label: texto?.trim(),
+          markerStart: flecha.startsWith("<") ? marca : undefined,
+          markerEnd: flecha.endsWith(">") ? marca : undefined,
+        });
+      }
+      return edges;
     }
 
-    // Título corto: hasta la primera coma o punto.
-    const titulo = (alt) => {
-      const t = alt.split(/[,.](\s|$)/)[0];
-      return t.length > 60 ? t.slice(0, 57) + "…" : t;
-    };
-
-    function muestra(items, n) {
-      const copia = [...items];
-      for (let i = copia.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copia[i], copia[j]] = [copia[j], copia[i]];
-      }
-      return copia.slice(0, n);
+    // Cada "## Título" es una imagen: la primera ![alt](ruta) del bloque es la
+    // imagen y el resto es el texto que se lee al abrirla.
+    function parsear(md) {
+      const bloques = md
+        .replace(/<[!]--[\s\S]*?-->/g, "") // comentarios HTML ([!] para no abrir uno dentro de <script>)
+        .split(/^## /m)
+        .slice(1)
+        .map((bloque) => {
+          const [titulo, ...resto] = bloque.split("\n");
+          return { titulo: titulo.trim(), cuerpo: resto.join("\n").trim() };
+        });
+      const esCon = (b) => norm(b.titulo) === "conexiones";
+      const items = bloques
+        .filter((b) => !esCon(b))
+        .map(({ titulo, cuerpo }) => {
+          const img = cuerpo.match(/!\[(.*?)\]\((.*?)\)/);
+          if (!img) console.warn("Sin imagen:", titulo);
+          return {
+            titulo,
+            alt: img ? img[1].trim() : titulo,
+            src: img ? img[2].trim().replace(/^\.\//, "") : "",
+            texto: (img ? cuerpo.replace(img[0], "") : cuerpo).trim(),
+          };
+        });
+      const con = bloques.find(esCon);
+      return { items, edges: con ? parsearConexiones(con.cuerpo, items) : [] };
     }
 
     // Posiciones aleatorias sin superposición (por el centro de cada burbuja).
@@ -183,34 +211,6 @@
       return Array.from({ length: n }, (_, i) => {
         const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
         return { x: Math.cos(a) * 300, y: Math.sin(a) * 300 };
-      });
-    }
-
-    // Cada imagen se une a una anterior (todo queda conectado) y se suman
-    // algunas relaciones extra.
-    function conexionesAleatorias(n) {
-      const pares = [];
-      for (let i = 1; i < n; i++) pares.push([Math.floor(Math.random() * i), i]);
-      const extras = 2 + Math.floor(Math.random() * 3);
-      for (let k = 0, tope = 0; k < extras && tope < 50; tope++) {
-        const a = Math.floor(Math.random() * n);
-        const b = Math.floor(Math.random() * n);
-        if (a === b || pares.some(([x, y]) => (x === a && y === b) || (x === b && y === a))) continue;
-        pares.push([a, b]);
-        k++;
-      }
-      const marca = { type: MarkerType.ArrowClosed, color: COLOR };
-      return pares.map(([a, b], i) => {
-        const flecha = azar(FLECHAS);
-        return {
-          id: a + "-" + b + "-" + i,
-          source: String(a),
-          target: String(b),
-          type: "flotante",
-          label: azar(RELACIONES) || undefined,
-          markerStart: flecha.startsWith("<") ? marca : undefined,
-          markerEnd: flecha.endsWith(">") ? marca : undefined,
-        };
       });
     }
 
@@ -313,7 +313,7 @@
         >
           <${Handle} type="target" position=${Position.Top} style=${oculto} />
           <${Handle} type="source" position=${Position.Top} style=${oculto} />
-          <span className="burbuja-titulo">${titulo(data.alt)}</span>
+          <span className="burbuja-titulo">${data.titulo}</span>
         </button>
       `;
     }
@@ -354,11 +354,11 @@
     const modalImg = document.getElementById("modal-img");
     const modalCaption = document.getElementById("modal-caption");
 
-    function abrir({ src, alt }) {
+    function abrir({ src, alt, texto }) {
       modalImg.src = src;
       modalImg.alt = alt;
-      modalCaption.textContent = alt;
-      modalCaption.style.display = alt ? "block" : "none";
+      modalCaption.innerHTML = marked.parse(texto);
+      modalCaption.style.display = texto ? "block" : "none";
       modal.classList.add("active");
     }
 
@@ -373,40 +373,39 @@
 
     // --- Constelación ---
 
-    function sortear(imagenes) {
-      const elegidas = muestra(imagenes, MUESTRA);
-      const posiciones = posicionesAleatorias(elegidas.length);
-      return {
-        nodes: elegidas.map((img, i) => ({
-          id: String(i),
-          type: "burbuja",
-          position: posiciones[i],
-          data: { ...img, size: SIZE, onClick: () => abrir(img) },
-        })),
-        edges: conexionesAleatorias(elegidas.length),
-      };
+    function disponer(items) {
+      const posiciones = posicionesAleatorias(items.length);
+      return items.map((it, i) => ({
+        id: String(i),
+        type: "burbuja",
+        position: posiciones[i],
+        data: { ...it, size: SIZE, onClick: () => abrir(it) },
+      }));
     }
 
-    function Constelacion({ imagenes }) {
+    // Las posiciones y la forma de las aristas cambian en cada carga; las
+    // conexiones son siempre las de constelacion.md.
+    function Constelacion({ items, edges }) {
       const [n, setN] = useState(0);
-      const [datos, setDatos] = useState(() => sortear(imagenes));
+      const [nodes, setNodes] = useState(() => disponer(items));
       const otra = () => {
-        setDatos(sortear(imagenes));
+        setNodes(disponer(items));
         setN(n + 1);
       };
       return html`
         <nav className="controles">
           <a href="index.html">Mosaico</a>
           <a href="bitacora.html">Bitácora</a>
-          <button type="button" onClick=${otra}>Otra constelación</button>
+          <button type="button" onClick=${otra}>Otra disposición</button>
         </nav>
-        <${Diagrama} key=${n} nodes=${datos.nodes} edges=${datos.edges} />
+        <${Diagrama} key=${n} nodes=${nodes} edges=${edges} />
       `;
     }
 
-    const md = await fetch("imagenes.md").then((r) => r.text());
+    const md = await fetch("constelacion.md").then((r) => r.text());
+    const { items, edges } = parsear(md);
     createRoot(document.getElementById("constelacion")).render(
-      html`<${Constelacion} imagenes=${parsearImagenes(md)} />`
+      html`<${Constelacion} items=${items} edges=${edges} />`
     );
   </script>
 </body>
