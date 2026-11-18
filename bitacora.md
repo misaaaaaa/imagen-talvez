@@ -145,3 +145,28 @@ TODO: Manifiesto de Juan Downey (relacionado con Herón de Alejandría)
 - materiales
 - control mental
 - pedagogía
+
+## reu cyn 21 de octubre
+
+MAGOS COMO DEMIURGOS -> trabajando con imágenes, poder de organizar más que de crear, como organizar un mundo para que parezca uno.  Abrir mundos, no crearlos
+
+Demiurgo tiene otra tradición que lo del mago, conexión con el mundo, metodología del mago, ¿cuál sería? ¿con qué trabaja? Modo de reorganizar la naturaleza. Por medio de una habilidad, establecer vínculos con ella, e ir resguardando y encontrando modos de generar conocimiento en paralelo y de 
+
+Lógica de apariencias, apariencias que pueden ser formas de conocimiento. 
+En vez de bien y mal, profundizar a cómo aparecen, la fábrica del aparecer del mago. Transformación con distintos grados de intención, que tiene operación en el mundo
+
+Martha Rosler, constelación de imágenes para hablar de la guerra. Desde fotografías de guerra hasta Rambo. 
+
+Entendiendo que es una figura no divina, sus manos son el medio para desplazar, mover, jugar, dominar, 
+
+Intencionar detalles. -> constelación de imágenes enfatizadas. 
+
+Recordar que pensamos CON imágenes, seguir una idea compleja y acompañarla y leerla y complementarla. 
+
+Mano cosa-> en vez de dominación, la cosa te está dirigiendo, los ojos sobre la cosa. 
+Barad -> tacto 
+
+Portar un saber sobre las cosas les otorga un lugar. Cuidar, acompañar, aconsejar, 
+
+ Persona con un poder pero outsider. Para hacerse cargo de la fisura. 
+
