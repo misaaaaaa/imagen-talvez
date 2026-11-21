@@ -170,3 +170,64 @@ Portar un saber sobre las cosas les otorga un lugar. Cuidar, acompañar, aconsej
 
  Persona con un poder pero outsider. Para hacerse cargo de la fisura. 
 
+
+## después del 21 de octubre
+
+### 21 oct (misma tarde de la reu)
+
+actualizado el index, y subí a biblio el texto de Bremmer, *The birth of the term 'magic'*. ahí está algo que no había pensado: magos parte nombrando a sacerdotes persas, y en atenas se vuelve insulto -> charlatán, sacerdote mendicante, extranjero. la palabra magia nace como acusación!!
+
+### 27 oct
+
+entró Remedios Varo, *El juglar (El mago)* 1956. el mago en su carromato y la masa toda envuelta en la misma tela gris, como un solo cuerpo. la masa mira.
+
+primera constelación -> [constelacion.html](./constelacion.html). burbujas con las imágenes, conexiones sorteadas al azar desde imagenes.md. no significaba nada todavía pero ya se movía. subí también a biblio a Frankish (ilusionismo, la conciencia como truco del cerebro sobre sí mismo) y el paper de engaño y empatía en animales. el engaño no es solo humano -> ¿el mago es una excepción de la naturaleza o una forma de ella?
+
+más tarde ese día: el diagramador. ahora las conexiones las escribo yo en [constelacion.md](./constelacion.md), en una sección "Conexiones":
+
+- prestidigitador -> charlatan : de la calle al estrado
+- charlatan -> juglar : la masa mira
+- juglar <-> mago : arcano I
+- kellar -> houdini : del vodevil
+- faraday -- kellar : la demostración como espectáculo
+
+aristas curvas que cambian en cada carga. click en burbuja abre la imagen con su texto. "otra disposición" para barajar.
+
+recordar Martha Rosler, constelar sí, pero intencionar detalles (reu cyn).
+
+### 17 nov
+
+entró la melancolía de cranach. una mujer trabajando en una mesa, hay varias versiones del cuadro con la misma mujer. mesa + manos + mujer, justo lo que faltaba.
+
+pasé a limpio las notas de la reu del 21 de octubre (están arriba).
+
+### 20-21 nov
+
+ordenar imagenes.md:
+
+- cada imagen con un título en encabezado 2, corto, minúscula, sin tildes, con guiones -> faraday, mago, prestidigitador, caida-simon, familia-astrologo... así la constelación los llama por nombre y no tengo que copiar todo el bloque
+- tags con *asteriscos* debajo de cada imagen. los que más aparecen: *manos* (30!!), *cosas*, *libro*, *mesa*. después *sobrenatural*, *hechicera*, *ciencia*, *2plano*. la mano gana por lejos, no sé si eso dice algo de los magos o de mí
+- plurales a singular (circulos -> circulo, libros -> libro, hechiceras -> hechicera)
+- comenté varias que no tenían tags (russolo, gandalf, stregozzo, paracelso, agrippa, berg-hoeg...). el mosaico quedó en 39
+
+entraron dos imágenes de la antigüedad, para el lado Bremmer:
+
+- behistun: Darío I pisa a Gaumata "el mago" (maguš), usurpador. la escena fundante del castigo al mago, la mano alzada que somete
+- dascilio: sacerdote persa con la boca cubierta para no contaminar el fuego, con el barsom. el magus antes del insulto
+
+biblio en md para poder leerla y buscar: Ferreira da Silva (*La deuda impagable*: separabilidad, determinabilidad, secuencialidad / Mundo Implicado, Corpus Infinitum), Soto (*Imágenes que resisten*, *Imaginación material*), Frankish, animales, Bremmer.
+
+y variaciones de constelación, botones arriba en constelacion.html. siempre parten de la carta de raider waite al centro o al inicio:
+
+- **manos** (radial) -> el gesto (Pathosformel, Warburg vía Soto). mostrar, distraer, dictar, trabajar, demostrar, someter. el mismo gesto es virtud en faraday y amenaza en las brujas o en pepito
+- **castigo** (filas) -> quién autoriza lo sobrenatural. magia autorizada / el juicio / magia castigada / el castigo como espectáculo. el otro va cambiando: persa, hereje, bruja (Federici, citada por Ferreira), hacker
+- **género** (columnas) -> el libro (masculino) / la pócima (feminizado) / fisuras. la carta la dibujó Pamela Colman Smith y quedó sin crédito. Medea y la poción de amor son de Evelyn De Morgan, una mujer
+- **virtud y vicio** (columnas) -> virtuoso / ambiguo / vicioso. la columna del medio es la más llena. Melissa o Circe: mismo cuadro, dos títulos, dos juicios. ¿la virtud es solo obediencia? (a quién le sirve el mago)
+- **contra la línea** (línea de tiempo) -> armar la secuencialidad a propósito para romperla con saltos hacia atrás. parte en 1910, no en la antigüedad. dascilio -- enmascarado : cubrir la boca, cubrir el rostro
+- **mesa** (radial) -> la mesa como suelo común de magia, ciencia, arte y hackeo. mano cosa. la misma mesa es laboratorio, timo o brujería según quién la ocupe
+
+TODO elegir una (o mezclar) y llevarla a constelacion.md
+
+TODO revisar datos antes de usarlos: houdini y faraday desenmascarando médiums (las mesas giratorias), melissa guiando a bradamante a la gruta de merlín, la magofonía de heródoto, merlín hijo de un demonio, pepito paga doble = los cubiletes
+
+TODO lo de Barad y el tacto sigue pendiente. y el manifiesto de Downey

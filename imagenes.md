@@ -76,7 +76,7 @@
 
 ![Rembrandt van Rijn, Un erudito en su estudio contemplando un disco mágico (conocido tradicionalmente como Fausto), ca. 1652. Aguafuerte, punta seca y buril, The Metropolitan Museum of Art, Nueva York (Accession Number: 23.31.21) / Rijksmuseum, Ámsterdam. Una de las cumbres del grabado barroco: un sabio, alquimista y ocultista se pone de pie junto a su mesa de trabajo al irrumpir en su aposento una misteriosa aparición luminosa en forma de disco con un anagrama cabalístico radiante en la ventana, sintetizando el mito fáustico y la búsqueda de la sabiduría esotérica universal. https://www.metmuseum.org/art/collection/search/387498](./buscador-magos/magos-img/05-mago-barroco-fausto-rembrandt.jpg)
 
-*s-xvii* *alquimista* *mesa* *cosas* *sobrenatural* *ocultismo* *circulo* *ciencia* *libro*
+*s-xvii* *alquimia* *mesa* *cosas* *sobrenatural* *ocultismo* *circulo* *ciencia* *libro*
 
 ## circulo
 

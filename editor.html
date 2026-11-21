@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor de constelaciones</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xyflow/react@12.3.6/dist/style.css">
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      color: #e0e0e0;
+      background: #000;
+      font: 14px/1.45 system-ui, sans-serif;
+    }
+
+    #editor {
+      display: grid;
+      grid-template: "barra barra barra" 48px "catalogo lienzo panel" 1fr / 270px 1fr 360px;
+      height: 100vh;
+    }
+
+    button, select, input, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    button, select {
+      padding: 5px 9px;
+      border: 1px solid #333;
+      background: #111;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: #888; }
+    button.primario { color: #000; background: #e0e0e0; border-color: #e0e0e0; }
+    button.primario:disabled { color: #888; background: #222; border-color: #333; cursor: default; }
+    button.peligro:hover { border-color: #ef476f; color: #ef476f; }
+
+    input, textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #333;
+      background: #0b0b0b;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus { border-color: #888; }
+    textarea { resize: vertical; line-height: 1.5; }
+
+    label {
+      display: block;
+      margin: 14px 0 4px;
+      color: #888;
+      font-size: 12px;
+    }
+
+    /* --- barra --- */
+
+    .barra {
+      grid-area: barra;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border-bottom: 1px solid #222;
+    }
+
+    .barra a { color: #aaa; font-size: 13px; }
+    .barra .espacio { flex: 1; }
+    .barra .estado { color: #888; font-size: 12px; }
+    .barra .estado.error { color: #ef476f; }
+
+    /* --- catálogo --- */
+
+    .catalogo {
+      grid-area: catalogo;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      border-right: 1px solid #222;
+    }
+
+    .catalogo .buscar { padding: 10px; border-bottom: 1px solid #222; }
+    .catalogo .ayuda { margin-top: 6px; color: #666; font-size: 11px; }
+
+    .catalogo ul {
+      flex: 1;
+      overflow-y: auto;
+      margin: 0;
+      padding: 4px 0;
+      list-style: none;
+    }
+
+    .catalogo li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 10px;
+      cursor: grab;
+    }
+
+    .catalogo li:hover { background: #151515; }
+    .catalogo li.en-lienzo { opacity: 0.45; }
+
+    .catalogo li img {
+      flex: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #222;
+    }
+
+    .catalogo .slug { font-size: 13px; }
+    .catalogo .tags { color: #666; font-size: 11px; }
+
+    /* --- lienzo --- */
+
+    .lienzo { grid-area: lienzo; position: relative; min-width: 0; }
+
+    .lienzo .react-flow {
+      --xy-background-color: transparent;
+      --xy-edge-stroke: #bbb;
+    }
+
+    .nodo {
+      position: relative;
+      border: 2px solid #e0e0e0;
+      border-radius: 50%;
+      background: #000 center / cover no-repeat;
+    }
+
+    .nodo.origen { border-width: 3px; border-color: #fff; }
+    .nodo.sel { outline: 3px solid #f6c445; outline-offset: 4px; }
+
+    .nodo-titulo {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      width: 180px;
+      transform: translateX(-50%);
+      color: #e0e0e0;
+      font-size: 13px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .nodo .asa {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #000;
+      background: #f6c445;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .nodo:hover .asa, .nodo.sel .asa { opacity: 1; }
+
+    .arista-texto {
+      position: absolute;
+      padding: 2px 6px;
+      color: #fff;
+      background: #000;
+      border: 1px solid #555;
+      font: italic 12px/1.2 system-ui, sans-serif;
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    .arista-texto.sel { border-color: #f6c445; }
+
+    .aviso {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      z-index: 10;
+      transform: translateX(-50%);
+      padding: 6px 12px;
+      color: #000;
+      background: #f6c445;
+      font-size: 13px;
+    }
+
+    /* --- panel --- */
+
+    .panel {
+      grid-area: panel;
+      overflow-y: auto;
+      padding: 14px 16px 30px;
+      border-left: 1px solid #222;
+    }
+
+    .panel h2 { margin: 0 0 4px; font-size: 16px; color: #fff; }
+    .panel .sub { color: #888; font-size: 12px; }
+    .panel .fila { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+    .panel .muestra { width: 100%; max-height: 220px; object-fit: contain; background: #0b0b0b; margin-top: 10px; }
+    .panel .nota { margin-top: 10px; color: #777; font-size: 12px; }
+    .panel ul.atajos { padding-left: 18px; color: #888; font-size: 12px; }
+    .panel .flechas { display: flex; gap: 4px; }
+    .panel .flechas button.activo { color: #000; background: #e0e0e0; }
+
+    .vistas { display: flex; }
+    .vistas button + button { border-left: 0; }
+    .vistas button.activo { color: #000; background: #e0e0e0; }
+
+    .catalogo li.sel { background: #222; box-shadow: inset 3px 0 #f6c445; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .chip {
+      padding: 2px 8px;
+      border: 1px solid #444;
+      border-radius: 999px;
+      background: transparent;
+      font-size: 12px;
+    }
+
+    .chip small { color: #777; margin-left: 4px; }
+    .chip.activo { color: #000; background: #e0e0e0; border-color: #e0e0e0; }
+    .chip.activo:hover { background: #ef476f; border-color: #ef476f; }
+    .chip:not(.activo):hover { border-color: #f6c445; color: #f6c445; }
+    .chip.sin-usar { border-style: dashed; color: #888; }
+
+    .grupo-tags { margin-top: 10px; }
+    .grupo-tags .grupo { margin-bottom: 4px; color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .crear { display: flex; gap: 6px; margin-top: 14px; }
+    .crear button { white-space: nowrap; }
+
+    .tabla-tags { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .tabla-tags td { padding: 3px 0; }
+    .tabla-tags tr { cursor: pointer; }
+    .tabla-tags tr:hover td { color: #f6c445; }
+    .tabla-tags .n { width: 28px; text-align: right; color: #888; padding-right: 8px; }
+    .tabla-tags .barra-n { height: 6px; background: #444; }
+    .tabla-tags tr.sin-usar td { color: #666; font-style: italic; }
+
+    @media (max-width: 900px) {
+      #editor { grid-template: "barra" 48px "lienzo" 1fr "panel" 40% / 1fr; }
+      .catalogo { display: none; }
+    }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.3.1",
+      "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@18.3.1?external=react",
+      "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?external=react",
+      "@xyflow/react": "https://esm.sh/@xyflow/react@12.3.6?external=react,react-dom",
+      "htm": "https://esm.sh/htm@3.1.1"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="editor"></div>
+
+  <script type="module">
+    import { createElement, useState, useEffect, useMemo, useRef } from "react";
+    import { createRoot } from "react-dom/client";
+    import {
+      ReactFlow,
+      ReactFlowProvider,
+      Handle,
+      Position,
+      BaseEdge,
+      EdgeLabelRenderer,
+      MarkerType,
+      ConnectionMode,
+      useInternalNode,
+      useNodesState,
+      useEdgesState,
+      useReactFlow,
+    } from "@xyflow/react";
+    import htm from "htm";
+
+    const html = htm.bind(createElement);
+
+    // Mismos tamaños que constelacion.html, para que las posiciones calcen.
+    const SIZE = 150;
+    const SIZE_ORIGEN = 200;
+    const ORIGEN = "mago";
+    const FLECHAS = ["->", "<-", "<->", "--"];
+    const MODOS = {
+      libre: "libre (las posiciones de este editor)",
+      aleatorio: "aleatorio",
+      radial: "radial",
+      columnas: "columnas por grupo",
+      filas: "filas por grupo",
+      linea: "línea de tiempo",
+      cruce: "cruce",
+    };
+
+    const slugificar = (t) =>
+      t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim()
+        .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const sinBarra = (r) => r.trim().replace(/^\.\//, "");
+    const tamano = (slug) => (slug === ORIGEN ? SIZE_ORIGEN : SIZE);
+
+    // --- lectura de markdown ---
+
+    function bloques(md) {
+      return md.split(/^## /m).slice(1).map((b) => {
+        const [titulo, ...resto] = b.split("\n");
+        return { titulo: titulo.trim(), cuerpo: resto.join("\n").trim() };
+      });
+    }
+
+    // imagenes.md: todas las imágenes, también las comentadas (marcadas como ocultas).
+    function parsearCatalogo(md) {
+      const out = [];
+      for (const { titulo, cuerpo } of bloques(md)) {
+        const img = cuerpo.match(/!\[([\s\S]*?)\]\(([^)]*)\)/);
+        if (!img) continue;
+        const antes = cuerpo.slice(0, img.index);
+        const resto = cuerpo.slice(img.index + img[0].length);
+        out.push({
+          slug: titulo,
+          alt: img[1].trim(),
+          src: sinBarra(img[2]),
+          tags: [...resto.matchAll(/\*([a-z0-9-]+)\*/g)].map((m) => m[1]),
+          oculta: antes.lastIndexOf("<!--") > antes.lastIndexOf("-->"),
+        });
+      }
+      return out;
+    }
+
+    // tags.md: "- tag" por línea, agrupados opcionalmente bajo "## grupo".
+    function parsearVocabulario(md) {
+      const out = [];
+      let grupo = "";
+      for (const l of md.split("\n")) {
+        const g = l.match(/^##\s+(.+)$/);
+        if (g) grupo = g[1].trim();
+        const t = l.match(/^\s*[-*+]\s+([a-z0-9-]+)\s*$/);
+        if (t && !out.some((v) => v.tag === t[1])) out.push({ tag: t[1], grupo });
+      }
+      return out;
+    }
+
+    function parsearConexiones(cuerpo) {
+      const out = [];
+      for (const linea of cuerpo.split("\n")) {
+        const m = linea
+          .replace(/^\s*[-*+]\s+/, "")
+          .match(/^(.+?)\s+(<->|->|<-|--)\s+(.+?)(?:\s+:\s*(.+))?$/);
+        if (m) out.push({ a: m[1].trim(), flecha: m[2], b: m[3].trim(), texto: (m[4] ?? "").trim() });
+      }
+      return out;
+    }
+
+    function parsearPropuesta(md, catalogo) {
+      let posiciones = {};
+      const p = md.match(/<!--\s*posiciones:\s*([\s\S]*?)-->/);
+      if (p) try { posiciones = JSON.parse(p[1]); } catch {}
+      const limpio = md.replace(/<!--[\s\S]*?-->/g, "");
+      const pre = limpio.split(/^## /m)[0];
+      const bs = bloques(limpio);
+      const seccion = (n) => bs.find((b) => b.titulo.toLowerCase() === n)?.cuerpo ?? "";
+      const meta = {
+        titulo: pre.match(/^# (.+)$/m)?.[1].trim() ?? "",
+        modo: pre.match(/^modo:\s*(\S+)/m)?.[1] ?? "libre",
+        incluye: pre.match(/^incluye:\s*(.+)$/m)?.[1].trim() ?? "",
+        lectura: seccion("lectura"),
+        grupos: seccion("grupos"),
+      };
+      if (meta.modo === "aleatorio" && !p) meta.modo = "libre";
+
+      const items = new Map();
+      for (const { titulo, cuerpo } of bs) {
+        if (["lectura", "conexiones", "grupos"].includes(titulo.toLowerCase())) continue;
+        const img = cuerpo.match(/!\[([\s\S]*?)\]\(([^)]*)\)/);
+        if (!img) continue;
+        items.set(titulo, {
+          slug: titulo,
+          alt: img[1].trim(),
+          src: sinBarra(img[2]),
+          texto: cuerpo.replace(img[0], "").trim(),
+        });
+      }
+      const conexiones = parsearConexiones(seccion("conexiones"));
+      const miembros = meta.grupos.split("\n")
+        .map((l) => l.replace(/^\s*[-*+]\s+/, "").match(/^.+?:\s*(.+)$/)?.[1] ?? "")
+        .flatMap((l) => l.split(",")).map((s) => s.trim()).filter(Boolean);
+      for (const n of [ORIGEN, ...conexiones.flatMap((c) => [c.a, c.b]), ...miembros]) {
+        if (items.has(n)) continue;
+        const c = catalogo.find((it) => it.slug === n);
+        if (c) items.set(n, { slug: n, alt: c.alt, src: c.src, texto: c.alt });
+      }
+      const ok = conexiones.filter((c) => items.has(c.a) && items.has(c.b));
+      return { meta, items: [...items.values()], conexiones: ok, posiciones };
+    }
+
+    // Sin posiciones guardadas: la carta al centro y el resto en anillos.
+    function disposicionInicial(slugs, posiciones) {
+      const pos = {};
+      const sueltos = slugs.filter((s) => {
+        if (posiciones[s]) pos[s] = { x: posiciones[s][0], y: posiciones[s][1] };
+        return !posiciones[s] && s !== ORIGEN;
+      });
+      if (!pos[ORIGEN]) pos[ORIGEN] = { x: 0, y: 0 };
+      let r = 330, i = 0;
+      while (i < sueltos.length) {
+        const cabe = Math.max(6, Math.floor((2 * Math.PI * r) / 250));
+        const anillo = sueltos.slice(i, i + cabe);
+        anillo.forEach((s, k) => {
+          const a = (k / anillo.length) * 2 * Math.PI - Math.PI / 2;
+          pos[s] = { x: pos[ORIGEN].x + Math.cos(a) * r, y: pos[ORIGEN].y + Math.sin(a) * r };
+        });
+        i += cabe;
+        r += 260;
+      }
+      return pos;
+    }
+
+    // --- escritura de markdown ---
+
+    function serializar(meta, nodes, edges) {
+      const L = ["# " + (meta.titulo.trim() || "Constelación"), "", "modo: " + meta.modo];
+      if (meta.incluye.trim()) L.push("incluye: " + meta.incluye.trim());
+      L.push("");
+      if (meta.lectura.trim()) L.push("## Lectura", "", meta.lectura.trim(), "");
+      L.push("## Conexiones", "");
+      for (const e of edges) {
+        const t = (e.data.texto ?? "").replace(/\s+/g, " ").trim();
+        L.push("- " + e.source + " " + e.data.flecha + " " + e.target + (t ? " : " + t : ""));
+      }
+      L.push("");
+      if (meta.grupos.trim()) L.push("## Grupos", "", meta.grupos.trim(), "");
+      const orden = [...nodes].sort((a, b) => (b.id === ORIGEN) - (a.id === ORIGEN));
+      const pos = {};
+      for (const n of orden) {
+        const d = n.data;
+        L.push("## " + d.slug, "", "![" + d.alt + "](./" + d.src + ")", "");
+        if (d.texto.trim()) L.push(d.texto.trim(), "");
+        pos[d.slug] = [Math.round(n.position.x + d.size / 2), Math.round(n.position.y + d.size / 2)];
+      }
+      // Comentario: constelacion.html lo usa en modo "libre"; el resto lo ignora.
+      L.push("<!-- posiciones: " + JSON.stringify(pos) + " -->", "");
+      return L.join("\n");
+    }
+
+    // --- nodos y aristas ---
+
+    function Burbuja({ data, selected }) {
+      return html`
+        <div
+          className=${"nodo" + (data.origen ? " origen" : "") + (selected ? " sel" : "")}
+          style=${{ width: data.size, height: data.size, backgroundImage: "url(" + JSON.stringify(data.src) + ")" }}
+          title=${data.alt}
+        >
+          <${Handle} type="source" position=${Position.Bottom} className="asa" />
+          <span className="nodo-titulo">${data.slug}</span>
+        </div>
+      `;
+    }
+
+    const centro = (n) => ({
+      x: n.internals.positionAbsolute.x + n.measured.width / 2,
+      y: n.internals.positionAbsolute.y + n.measured.height / 2,
+    });
+    const hacia = (p, q, r) => {
+      const d = Math.hypot(q.x - p.x, q.y - p.y) || 1;
+      return { x: p.x + ((q.x - p.x) / d) * r, y: p.y + ((q.y - p.y) / d) * r };
+    };
+
+    // Arista flotante: va de borde a borde; si hay varias entre los mismos dos
+    // nodos, cada una se curva hacia un lado distinto.
+    function Arista({ id, source, target, markerStart, markerEnd, label, selected, data }) {
+      const s = useInternalNode(source);
+      const t = useInternalNode(target);
+      if (!s?.measured?.width || !t?.measured?.width) return null;
+      const a = centro(s);
+      const b = centro(t);
+      const d = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+      const off = data?.desvio ?? 0;
+      const c = { x: (a.x + b.x) / 2 - ((b.y - a.y) / d) * off, y: (a.y + b.y) / 2 + ((b.x - a.x) / d) * off };
+      const p1 = hacia(a, c, s.measured.width / 2);
+      const p2 = hacia(b, c, t.measured.width / 2);
+      const path = "M" + p1.x + "," + p1.y + " Q" + c.x + "," + c.y + " " + p2.x + "," + p2.y;
+      const lx = 0.25 * p1.x + 0.5 * c.x + 0.25 * p2.x;
+      const ly = 0.25 * p1.y + 0.5 * c.y + 0.25 * p2.y;
+      const color = selected ? "#f6c445" : "#bbb";
+      return html`
+        <${BaseEdge}
+          id=${id}
+          path=${path}
+          markerStart=${markerStart}
+          markerEnd=${markerEnd}
+          interactionWidth=${24}
+          style=${{ stroke: color, strokeWidth: selected ? 2.5 : 1.5 }}
+        />
+        ${label && html`
+          <${EdgeLabelRenderer}>
+            <div
+              className=${"arista-texto nodrag nopan" + (selected ? " sel" : "")}
+              style=${{ transform: "translate(-50%, -50%) translate(" + lx + "px, " + ly + "px)" }}
+              onClick=${() => data.elegir(id)}
+            >${label}</div>
+          <//>
+        `}
+      `;
+    }
+
+    const nodeTypes = { burbuja: Burbuja };
+    const edgeTypes = { flotante: Arista };
+
+    const crearNodo = (it, c) => {
+      const size = tamano(it.slug);
+      return {
+        id: it.slug,
+        type: "burbuja",
+        position: { x: c.x - size / 2, y: c.y - size / 2 },
+        deletable: it.slug !== ORIGEN,
+        data: { ...it, size, origen: it.slug === ORIGEN },
+      };
+    };
+
+    // Tags de una imagen: los que usa (clic para quitar) y los disponibles
+    // del vocabulario (clic para agregar), más un campo para crear uno nuevo.
+    function TagsImagen({ it, vocab, conteo, alCambiar, alCrear }) {
+      const [nuevo, setNuevo] = useState("");
+      const grupos = new Map();
+      for (const v of vocab) (grupos.get(v.grupo) ?? grupos.set(v.grupo, []).get(v.grupo)).push(v.tag);
+      const fuera = it.tags.filter((t) => !vocab.some((v) => v.tag === t));
+      if (fuera.length) grupos.set("fuera de tags.md", fuera);
+      const crear = (e) => {
+        e.preventDefault();
+        alCrear(nuevo, it.slug);
+        setNuevo("");
+      };
+      return html`
+        <label>en uso (clic para quitar)</label>
+        <div className="chips">
+          ${it.tags.length
+            ? it.tags.map((t) => html`
+                <button type="button" key=${t} className="chip activo" onClick=${() => alCambiar(it.slug, it.tags.filter((x) => x !== t))}>${t}</button>
+              `)
+            : html`<span className="nota">sin tags</span>`}
+        </div>
+        <label>disponibles (clic para agregar)</label>
+        ${[...grupos].map(([g, ts]) => html`
+          <div className="grupo-tags" key=${g}>
+            ${g && html`<div className="grupo">${g}</div>`}
+            <div className="chips">
+              ${ts.filter((t) => !it.tags.includes(t)).map((t) => html`
+                <button
+                  type="button"
+                  key=${t}
+                  className=${"chip" + (conteo.get(t) ? "" : " sin-usar")}
+                  onClick=${() => alCambiar(it.slug, [...it.tags, t])}
+                >${t}<small>${conteo.get(t) ?? 0}</small></button>
+              `)}
+            </div>
+          </div>
+        `)}
+        <form className="crear" onSubmit=${crear}>
+          <input value=${nuevo} placeholder="tag nuevo" onInput=${(e) => setNuevo(e.target.value)} />
+          <button type="submit">crear y agregar</button>
+        </form>
+      `;
+    }
+
+    const leer = (url) => fetch(url, { cache: "no-store" }).then((r) => (r.ok ? r.text() : ""));
+
+    // --- editor ---
+
+    function Editor({ catalogoInicial, vocabInicial, archivosIniciales, servidor }) {
+      const [catalogo, setCatalogo] = useState(catalogoInicial);
+      const [vocab, setVocab] = useState(vocabInicial);
+      const [vista, setVista] = useState("constelacion");
+      const [tagSel, setTagSel] = useState(null);
+      const [nuevoTag, setNuevoTag] = useState("");
+      const rf = useReactFlow();
+      const lienzo = useRef(null);
+      const contador = useRef(0);
+      const [archivos, setArchivos] = useState(archivosIniciales);
+      const [archivo, setArchivo] = useState(null);
+      const [meta, setMeta] = useState({ titulo: "", modo: "libre", incluye: "", lectura: "", grupos: "" });
+      const [nodes, setNodes, onNodesChange] = useNodesState([]);
+      const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+      const [sel, setSel] = useState(null);
+      const [sucio, setSucio] = useState(false);
+      const [estado, setEstado] = useState({ texto: "", error: false });
+      const [filtro, setFiltro] = useState("");
+
+      const nuevaArista = (source, target, flecha = "->", texto = "") => ({
+        id: "e" + ++contador.current,
+        source,
+        target,
+        type: "flotante",
+        data: { flecha, texto },
+      });
+
+      async function cargar(nombre) {
+        if (sucio && !confirm("Hay cambios sin guardar. ¿Descartarlos?")) return;
+        const md = await leer(nombre);
+        const p = parsearPropuesta(md, catalogo);
+        const pos = disposicionInicial(p.items.map((it) => it.slug), p.posiciones);
+        setMeta(p.meta);
+        setNodes(p.items.map((it) => crearNodo(it, pos[it.slug])));
+        setEdges(p.conexiones.map((c) => nuevaArista(c.a, c.b, c.flecha, c.texto)));
+        setSel(null);
+        setSucio(false);
+        setArchivo(nombre);
+        setEstado({ texto: md ? "" : "archivo nuevo", error: false });
+        history.replaceState(null, "", "#" + nombre);
+        setTimeout(() => rf.fitView({ padding: 0.2 }), 80);
+      }
+
+      useEffect(() => {
+        const h = decodeURIComponent(location.hash.slice(1));
+        cargar(archivosIniciales.includes(h) ? h : "constelacion.md");
+      }, []);
+
+      useEffect(() => {
+        const avisar = (e) => { if (sucio) { e.preventDefault(); e.returnValue = ""; } };
+        window.addEventListener("beforeunload", avisar);
+        return () => window.removeEventListener("beforeunload", avisar);
+      }, [sucio]);
+
+      async function guardar() {
+        if (!servidor) {
+          setEstado({ texto: "para guardar, abre el editor con: python3 editor.py", error: true });
+          return;
+        }
+        const md = serializar(meta, nodes, edges);
+        try {
+          const r = await fetch("api/guardar?archivo=" + encodeURIComponent(archivo), { method: "POST", body: md });
+          const j = await r.json();
+          if (!r.ok) throw new Error(j.error);
+          setSucio(false);
+          if (!archivos.includes(archivo)) setArchivos([...archivos, archivo].sort());
+          setEstado({ texto: "guardado " + new Date().toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" }), error: false });
+        } catch (err) {
+          setEstado({ texto: "no se pudo guardar: " + err.message, error: true });
+        }
+      }
+
+      useEffect(() => {
+        const atajo = (e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key === "s") { e.preventDefault(); guardar(); }
+        };
+        window.addEventListener("keydown", atajo);
+        return () => window.removeEventListener("keydown", atajo);
+      });
+
+      function nueva() {
+        const nombre = prompt("Nombre de la nueva constelación:");
+        if (!nombre) return;
+        const ruta = "constelaciones/" + slugificar(nombre) + ".md";
+        if (archivos.includes(ruta)) return cargar(ruta);
+        if (sucio && !confirm("Hay cambios sin guardar. ¿Descartarlos?")) return;
+        const mago = catalogo.find((it) => it.slug === ORIGEN);
+        setMeta({ titulo: nombre, modo: "libre", incluye: "", lectura: "", grupos: "" });
+        setNodes(mago ? [crearNodo({ slug: ORIGEN, alt: mago.alt, src: mago.src, texto: mago.alt }, { x: 0, y: 0 })] : []);
+        setEdges([]);
+        setSel(null);
+        setArchivo(ruta);
+        setSucio(true);
+        setEstado({ texto: "sin guardar", error: false });
+        history.replaceState(null, "", "#" + ruta);
+        setTimeout(() => rf.fitView({ padding: 1, maxZoom: 0.8 }), 80);
+      }
+
+      // --- tags: se guardan al instante en imagenes.md y tags.md ---
+
+      async function api(ruta, datos) {
+        if (!servidor) throw new Error("abre el editor con: python3 editor.py");
+        const r = await fetch(ruta, { method: "POST", body: JSON.stringify(datos) });
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error);
+        return j;
+      }
+
+      async function ponerTags(slug, tags) {
+        try {
+          const j = await api("api/tags/imagen", { slug, tags });
+          setCatalogo((cs) => cs.map((c) => (c.slug === slug ? { ...c, tags: j.tags } : c)));
+          setEstado({ texto: "tags de " + slug + " guardados en imagenes.md", error: false });
+        } catch (err) {
+          setEstado({ texto: "no se pudieron guardar los tags: " + err.message, error: true });
+        }
+      }
+
+      async function crearTag(nombre, slug) {
+        const t = slugificar(nombre);
+        if (!t) return;
+        try {
+          if (!vocab.some((v) => v.tag === t)) {
+            await api("api/tags/nuevo", { tag: t });
+            setVocab((vs) => [...vs, { tag: t, grupo: vs.at(-1)?.grupo ?? "" }]);
+            setEstado({ texto: "tag nuevo en tags.md: " + t, error: false });
+          }
+          const it = slug && catalogo.find((c) => c.slug === slug);
+          if (it && !it.tags.includes(t)) await ponerTags(slug, [...it.tags, t]);
+        } catch (err) {
+          setEstado({ texto: "no se pudo crear el tag: " + err.message, error: true });
+        }
+      }
+
+      // Las imágenes comentadas en imagenes.md no se muestran ni cuentan; el
+      // catálogo completo solo sirve para no perder nodos de constelaciones viejas.
+      const activas = catalogo.filter((c) => !c.oculta);
+      const conteo = new Map();
+      for (const c of activas) for (const t of c.tags) conteo.set(t, (conteo.get(t) ?? 0) + 1);
+      const todosTags = [...new Set([...vocab.map((v) => v.tag), ...conteo.keys()])];
+
+      const centroVista = () => {
+        const r = lienzo.current.getBoundingClientRect();
+        return rf.screenToFlowPosition({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+      };
+
+      // Primer punto cerca de `c` que no pise otra imagen (espiral hacia afuera).
+      function lugarLibre(c) {
+        const ocupado = (p) => nodes.some((n) =>
+          Math.hypot(n.position.x + n.data.size / 2 - p.x, n.position.y + n.data.size / 2 - p.y) < SIZE + 40);
+        for (let i = 0; i < 400; i++) {
+          const a = i * 0.8;
+          const r = i * 12;
+          const p = { x: c.x + Math.cos(a) * r, y: c.y + Math.sin(a) * r };
+          if (!ocupado(p)) return p;
+        }
+        return c;
+      }
+
+      function agregar(it, c) {
+        const ya = nodes.find((n) => n.id === it.slug);
+        if (ya) {
+          setSel({ tipo: "nodo", id: ya.id });
+          rf.setCenter(ya.position.x + ya.data.size / 2, ya.position.y + ya.data.size / 2, { zoom: rf.getZoom(), duration: 400 });
+          return;
+        }
+        const nodo = crearNodo({ slug: it.slug, alt: it.alt, src: it.src, texto: it.alt }, c ?? lugarLibre(centroVista()));
+        setNodes((ns) => [...ns.map((n) => ({ ...n, selected: false })), { ...nodo, selected: true }]);
+        setSel({ tipo: "nodo", id: it.slug });
+        setSucio(true);
+      }
+
+      const cambiarNodo = (id, cambios) => {
+        setNodes((ns) => ns.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...cambios } } : n)));
+        setSucio(true);
+      };
+      const cambiarArista = (id, cambios) => {
+        setEdges((es) => es.map((e) => (e.id === id ? { ...e, ...cambios, data: { ...e.data, ...cambios.data } } : e)));
+        setSucio(true);
+      };
+      const quitarNodo = (id) => {
+        setNodes((ns) => ns.filter((n) => n.id !== id));
+        setEdges((es) => es.filter((e) => e.source !== id && e.target !== id));
+        setSel(null);
+        setSucio(true);
+      };
+      const quitarArista = (id) => {
+        setEdges((es) => es.filter((e) => e.id !== id));
+        setSel(null);
+        setSucio(true);
+      };
+      const cambiarMeta = (cambios) => {
+        setMeta((m) => ({ ...m, ...cambios }));
+        setSucio(true);
+      };
+
+      const elegirArista = (id) => {
+        setSel({ tipo: "arista", id });
+        setEdges((es) => es.map((e) => ({ ...e, selected: e.id === id })));
+        setNodes((ns) => ns.map((n) => ({ ...n, selected: false })));
+      };
+
+      // Aristas para dibujar: marcadores según la flecha y desvío para las paralelas.
+      const visibles = useMemo(() => {
+        const pares = {};
+        for (const e of edges) (pares[[e.source, e.target].sort().join("|")] ??= []).push(e.id);
+        return edges.map((e) => {
+          const lista = pares[[e.source, e.target].sort().join("|")];
+          const i = lista.indexOf(e.id);
+          const signo = e.source < e.target ? 1 : -1;
+          const color = e.selected ? "#f6c445" : "#bbb";
+          const marca = { type: MarkerType.ArrowClosed, color, width: 18, height: 18 };
+          return {
+            ...e,
+            label: e.data.texto,
+            markerStart: e.data.flecha.startsWith("<") ? marca : undefined,
+            markerEnd: e.data.flecha.endsWith(">") ? marca : undefined,
+            data: { ...e.data, desvio: (i - (lista.length - 1) / 2) * 70 * signo, elegir: elegirArista },
+          };
+        });
+      }, [edges]);
+
+      const alCambiarNodos = (cambios) => {
+        onNodesChange(cambios);
+        if (cambios.some((c) => c.type === "remove" || (c.type === "position" && c.dragging))) setSucio(true);
+        if (cambios.some((c) => c.type === "remove" && sel?.id === c.id)) setSel(null);
+      };
+      const alCambiarAristas = (cambios) => {
+        onEdgesChange(cambios);
+        if (cambios.some((c) => c.type === "remove")) {
+          setSucio(true);
+          if (cambios.some((c) => sel?.id === c.id)) setSel(null);
+        }
+      };
+
+      // Al soltar una conexión el navegador dispara además un clic sobre la
+      // imagen de destino: se ignora para que el panel muestre la arista nueva.
+      const recien = useRef(0);
+      const clic = (f) => (...a) => { if (Date.now() - recien.current > 300) f(...a); };
+
+      const conectar = ({ source, target }) => {
+        if (!source || !target || source === target) return;
+        recien.current = Date.now();
+        const e = nuevaArista(source, target);
+        setEdges((es) => [...es.map((x) => ({ ...x, selected: false })), { ...e, selected: true }]);
+        setSel({ tipo: "arista", id: e.id });
+        setSucio(true);
+      };
+
+      const soltar = (ev) => {
+        ev.preventDefault();
+        const slug = ev.dataTransfer.getData("text/slug");
+        const it = catalogo.find((c) => c.slug === slug);
+        if (it) agregar(it, rf.screenToFlowPosition({ x: ev.clientX, y: ev.clientY }));
+      };
+
+      const enLienzo = new Set(nodes.map((n) => n.id));
+      const q = slugificar(filtro);
+      const exacto = filtro.trim().match(/^\*([a-z0-9-]*)\*$/);
+      const listado = exacto
+        ? activas.filter((it) => (exacto[1] ? it.tags.includes(exacto[1]) : !it.tags.length))
+        : activas.filter(
+            (it) => !q || it.slug.includes(q) || it.tags.some((t) => t.includes(q)) || slugificar(it.alt).includes(q)
+          );
+      const itTags = tagSel && activas.find((c) => c.slug === tagSel);
+
+      const nodoSel = sel?.tipo === "nodo" ? nodes.find((n) => n.id === sel.id) : null;
+      const aristaSel = sel?.tipo === "arista" ? edges.find((e) => e.id === sel.id) : null;
+      const delCatalogo = nodoSel && activas.find((c) => c.slug === nodoSel.id);
+      const idVista = archivo === "constelacion.md" ? "inicial" : archivo?.replace(/^constelaciones\/|\.md$/g, "");
+
+      return html`
+        <header className="barra">
+          <div className="vistas">
+            <button type="button" className=${vista === "constelacion" ? "activo" : ""} onClick=${() => setVista("constelacion")}>Constelación</button>
+            <button type="button" className=${vista === "tags" ? "activo" : ""} onClick=${() => setVista("tags")}>Tags</button>
+          </div>
+          <select value=${archivo ?? ""} onChange=${(e) => cargar(e.target.value)}>
+            ${[...new Set([...archivos, archivo].filter(Boolean))].map((a) => html`<option key=${a} value=${a}>${a}</option>`)}
+          </select>
+          <button type="button" onClick=${nueva}>Nueva</button>
+          <button type="button" className="primario" onClick=${guardar} disabled=${!sucio}>Guardar</button>
+          <span className=${"estado" + (estado.error ? " error" : "")}>
+            ${estado.texto || (sucio ? "cambios sin guardar" : "")}
+          </span>
+          <span className="espacio"></span>
+          <a href=${"constelacion.html#" + idVista} target="_blank">ver constelación ↗</a>
+          <a href="index.html">mosaico</a>
+        </header>
+
+        <aside className="catalogo">
+          <div className="buscar">
+            <input type="search" placeholder="buscar por nombre o tag" value=${filtro} onInput=${(e) => setFiltro(e.target.value)} />
+            <div className="ayuda">
+              ${(vista === "tags" ? "clic para editar sus tags" : "clic o arrastra al lienzo para agregar") +
+                " · " + listado.length + " de " + activas.length + " imágenes · *tag* filtra exacto, ** las sin tags"}
+            </div>
+          </div>
+          <ul>
+            ${listado.map((it) => html`
+              <li
+                key=${it.slug}
+                className=${(vista === "constelacion" && enLienzo.has(it.slug) ? "en-lienzo" : "") + (vista === "tags" && tagSel === it.slug ? " sel" : "")}
+                draggable="true"
+                onDragStart=${(e) => e.dataTransfer.setData("text/slug", it.slug)}
+                onClick=${() => (vista === "tags" ? setTagSel(it.slug) : agregar(it))}
+                title=${it.alt}
+              >
+                <img src=${it.src} alt="" loading="lazy" />
+                <div>
+                  <div className="slug">${it.slug}</div>
+                  <div className="tags">${it.tags.join(" ")}</div>
+                </div>
+              </li>
+            `)}
+          </ul>
+        </aside>
+
+        <main className="lienzo" ref=${lienzo}>
+          ${meta.incluye && html`<div className="aviso">esta constelación superpone otras (incluye: ${meta.incluye}); aquí solo se editan sus nodos propios</div>`}
+          <${ReactFlow}
+            nodes=${nodes}
+            edges=${visibles}
+            nodeTypes=${nodeTypes}
+            edgeTypes=${edgeTypes}
+            onNodesChange=${alCambiarNodos}
+            onEdgesChange=${alCambiarAristas}
+            onConnect=${conectar}
+            connectionMode=${ConnectionMode.Loose}
+            connectionRadius=${100}
+            onNodeClick=${clic((_, n) => setSel({ tipo: "nodo", id: n.id }))}
+            onEdgeClick=${(_, e) => setSel({ tipo: "arista", id: e.id })}
+            onPaneClick=${clic(() => setSel(null))}
+            onDrop=${soltar}
+            onDragOver=${(e) => { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; }}
+            deleteKeyCode=${["Backspace", "Delete"]}
+            minZoom=${0.05}
+            proOptions=${{ hideAttribution: true }}
+          />
+        </main>
+
+        <aside className="panel">
+          ${vista === "tags" ? (itTags ? html`
+            <button type="button" onClick=${() => setTagSel(null)}>← todos los tags</button>
+            <h2 style=${{ marginTop: "12px" }}>${itTags.slug}</h2>
+            <img className="muestra" src=${itTags.src} alt=${itTags.alt} />
+            <${TagsImagen} it=${itTags} vocab=${vocab} conteo=${conteo} alCambiar=${ponerTags} alCrear=${crearTag} />
+          ` : html`
+            <h2>Tags</h2>
+            <div className="sub">
+              ${conteo.size + " en uso · " + (todosTags.length - conteo.size) + " sin usar · " +
+                activas.filter((c) => !c.tags.length).length + " imágenes sin tags"}
+            </div>
+            <form className="crear" onSubmit=${(e) => { e.preventDefault(); crearTag(nuevoTag); setNuevoTag(""); }}>
+              <input value=${nuevoTag} placeholder="tag nuevo" onInput=${(e) => setNuevoTag(e.target.value)} />
+              <button type="submit">crear</button>
+            </form>
+            <div className="nota">clic en un tag para ver sus imágenes; clic en una imagen de la izquierda para editar sus tags.</div>
+            <label>todos los tags</label>
+            <table className="tabla-tags">
+              <tbody>
+                ${[...todosTags].sort((a, b) => (conteo.get(b) ?? 0) - (conteo.get(a) ?? 0) || a.localeCompare(b)).map((t) => html`
+                  <tr key=${t} className=${conteo.get(t) ? "" : "sin-usar"} onClick=${() => setFiltro("*" + t + "*")}>
+                    <td className="n">${conteo.get(t) ?? 0}</td>
+                    <td>${t}${conteo.get(t) ? "" : " (sin usar)"}${vocab.some((v) => v.tag === t) ? "" : " · fuera de tags.md"}</td>
+                    <td style=${{ width: "40%" }}><div className="barra-n" style=${{ width: ((conteo.get(t) ?? 0) / Math.max(1, ...conteo.values())) * 100 + "%" }}></div></td>
+                  </tr>
+                `)}
+              </tbody>
+            </table>
+          `) : nodoSel ? html`
+            <h2>${nodoSel.data.slug}</h2>
+            <img className="muestra" src=${nodoSel.data.src} alt=${nodoSel.data.alt} />
+            <label>texto de la entrada (markdown)</label>
+            <textarea
+              rows="10"
+              value=${nodoSel.data.texto}
+              onInput=${(e) => cambiarNodo(nodoSel.id, { texto: e.target.value })}
+            ></textarea>
+            <div className="nota">pie de imagen: ${nodoSel.data.alt}</div>
+            <div className="fila">
+              ${delCatalogo && html`
+                <button type="button" onClick=${() => cambiarNodo(nodoSel.id, { texto: delCatalogo.alt })}>usar pie de imagenes.md</button>
+              `}
+              ${nodoSel.id !== ORIGEN && html`
+                <button type="button" className="peligro" onClick=${() => quitarNodo(nodoSel.id)}>quitar</button>
+              `}
+            </div>
+            <div className="nota">
+              ${edges.filter((e) => e.source === nodoSel.id || e.target === nodoSel.id).length} conexiones.
+              Para conectar, arrastra desde el punto amarillo hasta otra imagen.
+            </div>
+            ${delCatalogo && html`
+              <${TagsImagen} it=${delCatalogo} vocab=${vocab} conteo=${conteo} alCambiar=${ponerTags} alCrear=${crearTag} />
+              <div className="nota">los tags se guardan al instante en imagenes.md</div>
+            `}
+          ` : aristaSel ? html`
+            <h2>${aristaSel.source} ${aristaSel.data.flecha} ${aristaSel.target}</h2>
+            <label>texto de la conexión</label>
+            <input
+              value=${aristaSel.data.texto}
+              autoFocus
+              placeholder="ej: la mesa y los cubiletes"
+              onInput=${(e) => cambiarArista(aristaSel.id, { data: { texto: e.target.value } })}
+            />
+            <label>dirección</label>
+            <div className="flechas">
+              ${FLECHAS.map((f) => html`
+                <button
+                  type="button"
+                  key=${f}
+                  className=${aristaSel.data.flecha === f ? "activo" : ""}
+                  onClick=${() => cambiarArista(aristaSel.id, { data: { flecha: f } })}
+                >${f}</button>
+              `)}
+            </div>
+            <div className="fila">
+              <button type="button" onClick=${() => cambiarArista(aristaSel.id, { source: aristaSel.target, target: aristaSel.source })}>invertir</button>
+              <button type="button" className="peligro" onClick=${() => quitarArista(aristaSel.id)}>quitar</button>
+            </div>
+          ` : html`
+            <h2>${archivo}</h2>
+            <label>título</label>
+            <input value=${meta.titulo} onInput=${(e) => cambiarMeta({ titulo: e.target.value })} />
+            <label>modo de diagramar en constelacion.html</label>
+            <select value=${meta.modo} onChange=${(e) => cambiarMeta({ modo: e.target.value })}>
+              ${Object.entries(MODOS).map(([k, v]) => html`<option key=${k} value=${k}>${v}</option>`)}
+            </select>
+            <label>lectura (markdown)</label>
+            <textarea rows="10" value=${meta.lectura} onInput=${(e) => cambiarMeta({ lectura: e.target.value })}></textarea>
+            <label>grupos (una línea por grupo: "- etiqueta: a, b, c")</label>
+            <textarea rows="4" value=${meta.grupos} onInput=${(e) => cambiarMeta({ grupos: e.target.value })}></textarea>
+            <label>atajos</label>
+            <ul className="atajos">
+              <li>clic en una imagen o conexión para editar su texto</li>
+              <li>arrastra desde el punto amarillo de una imagen a otra para conectarlas</li>
+              <li>borrar / supr quita lo seleccionado (la carta no se puede quitar)</li>
+              <li>cmd/ctrl + s guarda</li>
+            </ul>
+            <div className="nota">${nodes.length} imágenes · ${edges.length} conexiones</div>
+          `}
+        </aside>
+      `;
+    }
+
+    const catalogo = parsearCatalogo(await leer("imagenes.md"));
+    const vocab = parsearVocabulario(await leer("tags.md"));
+    let archivos = ["constelacion.md"];
+    let servidor = false;
+    try {
+      const r = await fetch("api/archivos", { cache: "no-store" });
+      if (r.ok) { archivos = await r.json(); servidor = true; }
+    } catch {}
+
+    createRoot(document.getElementById("editor")).render(html`
+      <${ReactFlowProvider}>
+        <${Editor} catalogoInicial=${catalogo} vocabInicial=${vocab} archivosIniciales=${archivos} servidor=${servidor} />
+      <//>
+    `);
+  </script>
+</body>
+</html>

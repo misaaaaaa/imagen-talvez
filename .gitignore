@@ -430,3 +430,6 @@ FodyWeavers.xsd
 
 # MAC OS files
 .DS_Store
+
+# ensayo local
+texto.md

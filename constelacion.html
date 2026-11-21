@@ -160,6 +160,46 @@
       margin-top: 8px;
     }
 
+    .miradas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .miradas button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border: 1px solid #333;
+      color: #e0e0e0;
+      background: transparent;
+      font: 12px/1.2 system-ui, sans-serif;
+      cursor: pointer;
+    }
+
+    .miradas button.activo {
+      border-color: #fff;
+      background: #222;
+    }
+
+    .miradas i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .bisagras {
+      margin-bottom: 12px;
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    .burbuja {
+      transition: opacity 0.2s ease;
+    }
+
     .arista-texto {
       position: absolute;
       z-index: 1000; /* sobre las burbujas */
@@ -229,7 +269,19 @@
       { id: "virtud", nombre: "Virtud y vicio", archivo: "constelaciones/virtud.md" },
       { id: "aparecer", nombre: "Contra la línea", archivo: "constelaciones/aparecer.md" },
       { id: "mesa", nombre: "Mesa", archivo: "constelaciones/mesa.md" },
+      { id: "todas", nombre: "Todas", archivo: "constelaciones/todas.md" },
     ];
+
+    // Color de cada mirada en la constelación que las superpone.
+    const COLORES = {
+      inicial: "#bdbdbd",
+      manos: "#f6c445",
+      castigo: "#ef476f",
+      genero: "#b388ff",
+      virtud: "#4cc9f0",
+      aparecer: "#7bd389",
+      mesa: "#ff9f68",
+    };
 
     const MODOS = {
       aleatorio: "disposición aleatoria",
@@ -237,6 +289,8 @@
       columnas: "columnas por grupo",
       filas: "filas por grupo",
       linea: "línea de tiempo (para romperla)",
+      cruce: "cruce: al centro, las imágenes por donde pasan más miradas",
+      libre: "libre: dispuesta a mano en el editor",
     };
 
     const norm = (t) =>
@@ -299,10 +353,15 @@
     // define (o redefine) ese nodo. Los nodos que solo se nombran en conexiones o
     // grupos se buscan en imagenes.md.
     function parsear(md, catalogo) {
+      let posiciones = {};
+      const pc = md.match(/<!--\s*posiciones:\s*([\s\S]*?)-->/);
+      if (pc) try { posiciones = JSON.parse(pc[1]); } catch {}
       md = md.replace(/<[!]--[\s\S]*?-->/g, "");
       const preambulo = md.split(/^## /m)[0];
       const titulo = preambulo.match(/^# (.+)$/m)?.[1].trim() ?? "";
       const modo = preambulo.match(/^modo:\s*(\S+)/m)?.[1] ?? "aleatorio";
+      const incluye = (preambulo.match(/^incluye:\s*(.+)$/m)?.[1] ?? "")
+        .split(",").map(norm).filter(Boolean);
       const bs = bloques(md);
       const especial = (n) => bs.find((b) => norm(b.titulo) === n);
       const lectura = especial("lectura")?.cuerpo ?? "";
@@ -356,7 +415,41 @@
       }
       // La carta va siempre primero: es el origen de toda disposición.
       const lista = [...items.values()].sort((x, y) => (y.id === ORIGEN) - (x.id === ORIGEN));
-      return { titulo, modo, lectura, items: lista, edges, grupos };
+      return { titulo, modo, lectura, incluye, items: lista, edges, grupos, posiciones };
+    }
+
+    // Superpone varias propuestas: une sus nodos y conserva todas sus aristas,
+    // cada una con el color de su mirada (puede haber varias entre dos nodos).
+    function superponer(base, propuestas) {
+      const items = new Map();
+      const edges = [];
+      for (const m of base.incluye) {
+        const q = propuestas[m];
+        if (!q) {
+          console.warn("Mirada desconocida:", m);
+          continue;
+        }
+        for (const it of q.items) {
+          const prev = items.get(it.id) ?? { ...it, miradas: [] };
+          items.set(it.id, prev);
+        }
+        const color = COLORES[m] ?? COLOR;
+        for (const e of q.edges) {
+          items.get(e.source).miradas.push(m);
+          items.get(e.target).miradas.push(m);
+          const marca = (x) => x && { ...x, color };
+          edges.push({
+            ...e,
+            id: m + ":" + e.id,
+            markerStart: marca(e.markerStart),
+            markerEnd: marca(e.markerEnd),
+            data: { mirada: m, color },
+          });
+        }
+      }
+      const lista = [...items.values()].map((it) => ({ ...it, miradas: [...new Set(it.miradas)] }));
+      lista.sort((x, y) => (y.id === ORIGEN) - (x.id === ORIGEN) || y.miradas.length - x.miradas.length);
+      return { ...base, items: lista, edges, miradas: base.incluye.filter((m) => propuestas[m]) };
     }
 
     // --- Disposiciones (posiciones por el centro de cada burbuja) ---
@@ -491,8 +584,44 @@
       return { pos, etiquetas };
     }
 
-    function disponer(modo, items, edges, grupos, barajado) {
+    // Anillos según cuántas miradas cruzan cada imagen: más miradas, más al centro.
+    function cruce(items, barajado) {
+      const pos = new Map([[items[0].id, { x: 0, y: 0 }]]);
+      const porCruce = new Map();
+      for (const it of items.slice(1)) {
+        const k = it.miradas?.length ?? 1;
+        if (!porCruce.has(k)) porCruce.set(k, []);
+        porCruce.get(k).push(it);
+      }
+      let r = 0;
+      [...porCruce.keys()].sort((a, b) => b - a).forEach((k, d) => {
+        const anillo = barajado ? barajar(porCruce.get(k)) : porCruce.get(k);
+        const ancho = Math.max(...anillo.map((it) => tamano(it)));
+        r = Math.max(r + ancho + 120, (anillo.length * (ancho + 70)) / (2 * Math.PI));
+        const giro = barajado ? Math.random() * 2 * Math.PI : -Math.PI / 2 + d * 0.5;
+        anillo.forEach((it, i) => {
+          const a = giro + (i * 2 * Math.PI) / anillo.length;
+          pos.set(it.id, { x: Math.cos(a) * r, y: Math.sin(a) * r });
+        });
+      });
+      return { pos, etiquetas: [] };
+    }
+
+    // Posiciones guardadas por editor.html; las que falten, al azar.
+    function libre(ids, posiciones) {
+      const azar = aleatoria(ids).pos;
+      const pos = new Map();
+      for (const id of ids) {
+        const p = posiciones?.[id];
+        pos.set(id, p ? { x: p[0], y: p[1] } : azar.get(id));
+      }
+      return { pos, etiquetas: [] };
+    }
+
+    function disponer(modo, items, edges, grupos, barajado, posiciones) {
+      if (modo === "cruce") return cruce(items, barajado);
       const ids = items.map((it) => it.id);
+      if (modo === "libre" && !barajado) return libre(ids, posiciones);
       if (modo === "radial") return radial(ids, edges, barajado);
       if (modo === "columnas") return columnas(ids, grupos, barajado, false);
       if (modo === "filas") return columnas(ids, grupos, barajado, true);
@@ -563,7 +692,7 @@
       return { x: a.x + ((b.x - a.x) / d) * r, y: a.y + ((b.y - a.y) / d) * r };
     }
 
-    function Arista({ id, source, target, markerStart, markerEnd, label }) {
+    function Arista({ id, source, target, markerStart, markerEnd, label, style, data }) {
       const [forma] = useState(formaAleatoria);
       const s = useInternalNode(source);
       const t = useInternalNode(target);
@@ -572,12 +701,15 @@
       const p2 = borde(t, s);
       const [path, lx, ly] = curva(p1, p2, forma);
       return html`
-        <${BaseEdge} id=${id} path=${path} markerStart=${markerStart} markerEnd=${markerEnd} />
-        ${label && html`
+        <${BaseEdge} id=${id} path=${path} markerStart=${markerStart} markerEnd=${markerEnd} style=${style} />
+        ${label && !data?.sinTexto && html`
           <${EdgeLabelRenderer}>
             <div
               className="arista-texto"
-              style=${{ transform: "translate(-50%, -50%) translate(" + lx + "px, " + ly + "px)" }}
+              style=${{
+                transform: "translate(-50%, -50%) translate(" + lx + "px, " + ly + "px)",
+                borderColor: data?.color ?? "#555",
+              }}
             >${label}</div>
           <//>
         `}
@@ -592,7 +724,7 @@
       return html`
         <button
           type="button"
-          className=${"burbuja" + (data.origen ? " origen" : "")}
+          className=${"burbuja" + (data.origen ? " origen" : "") + (data.miradas ?? []).map((m) => " m-" + m).join("")}
           style=${{ width: data.size, height: data.size, backgroundImage: "url(" + JSON.stringify(data.src) + ")" }}
           aria-label=${data.alt}
           onClick=${data.onClick}
@@ -666,8 +798,15 @@
 
     // --- Constelación ---
 
-    function nodos({ modo, items, edges, grupos }, barajado) {
-      const { pos, etiquetas } = disponer(modo, items, edges, grupos, barajado);
+    // En la superposición, el tamaño crece con las miradas que cruzan la imagen.
+    function tamano(it) {
+      if (it.id === ORIGEN) return SIZE_ORIGEN;
+      if (!it.miradas) return SIZE;
+      return Math.round(SIZE * (0.7 + 0.15 * it.miradas.length));
+    }
+
+    function nodos({ modo, items, edges, grupos, posiciones }, barajado) {
+      const { pos, etiquetas } = disponer(modo, items, edges, grupos, barajado, posiciones);
       return [
         ...items.map((it) => {
           const origen = it.id === ORIGEN;
@@ -675,7 +814,7 @@
             id: it.id,
             type: "burbuja",
             position: pos.get(it.id),
-            data: { ...it, origen, size: origen ? SIZE_ORIGEN : SIZE, onClick: () => abrir(it) },
+            data: { ...it, origen, size: tamano(it), onClick: () => abrir(it) },
           };
         }),
         ...etiquetas.map((e, i) => ({
@@ -697,12 +836,14 @@
       const [id, setId] = useState(idInicial);
       const [n, setN] = useState(0);
       const [verLectura, setVerLectura] = useState(true);
+      const [foco, setFoco] = useState(null);
       const p = propuestas[id];
       const [nodes, setNodes] = useState(() => nodos(p, false));
 
       const elegir = (nuevo) => {
         history.replaceState(null, "", "#" + nuevo);
         setId(nuevo);
+        setFoco(null);
         setNodes(nodos(propuestas[nuevo], false));
         setN(n + 1);
       };
@@ -711,7 +852,25 @@
         setN(n + 1);
       };
 
+      // En la superposición: color por mirada; con una mirada en foco, el resto
+      // se apaga y solo ella muestra sus textos.
+      const edges = p.miradas
+        ? p.edges.map((e) => {
+            const enFoco = !foco || e.data.mirada === foco;
+            return {
+              ...e,
+              style: { stroke: e.data.color, strokeWidth: enFoco && foco ? 2.5 : 1.5, opacity: enFoco ? 1 : 0.06 },
+              data: { ...e.data, sinTexto: !foco || !enFoco },
+              zIndex: enFoco ? 1 : 0,
+            };
+          })
+        : p.edges;
+      const bisagras = p.miradas
+        ? p.items.filter((it) => it.id !== ORIGEN).slice(0, 6)
+        : [];
+
       return html`
+        ${foco && html`<style>${".lienzo .burbuja:not(.m-" + foco + "):not(.origen) { opacity: 0.15; }"}</style>`}
         <nav className="controles">
           <a href="index.html">Mosaico</a>
           <a href="bitacora.html">Bitácora</a>
@@ -735,12 +894,31 @@
           `}
         </nav>
         <div className=${"lienzo" + (p.lectura && verLectura ? " con-lectura" : "")}>
-          <${Diagrama} key=${id + "-" + n + "-" + verLectura} nodes=${nodes} edges=${p.edges} />
+          <${Diagrama} key=${id + "-" + n + "-" + verLectura} nodes=${nodes} edges=${edges} />
         </div>
         ${p.lectura && verLectura && html`
           <aside className="lectura">
             ${p.titulo && html`<h2>${p.titulo}</h2>`}
             <div className="modo">${MODOS[p.modo] ?? p.modo}</div>
+            ${p.miradas && html`
+              <div className="miradas">
+                ${p.miradas.map((m) => html`
+                  <button
+                    type="button"
+                    key=${m}
+                    className=${foco === m ? "activo" : ""}
+                    onClick=${() => setFoco(foco === m ? null : m)}
+                  >
+                    <i style=${{ background: COLORES[m] ?? COLOR }}></i>
+                    ${PROPUESTAS.find((q) => q.id === m)?.nombre ?? m}
+                    ${" (" + p.edges.filter((e) => e.data.mirada === m).length + ")"}
+                  </button>
+                `)}
+              </div>
+              <div className="bisagras">
+                bisagras: ${bisagras.map((it) => it.titulo + " (" + it.miradas.length + ")").join(", ")}
+              </div>
+            `}
             <div dangerouslySetInnerHTML=${{ __html: marked.parse(p.lectura) }} />
           </aside>
         `}
@@ -753,6 +931,8 @@
     const propuestas = Object.fromEntries(
       PROPUESTAS.map((q, i) => [q.id, parsear(mds[i], catalogo)])
     );
+    for (const [k, q] of Object.entries(propuestas))
+      if (q.incluye.length) propuestas[k] = superponer(q, propuestas);
     createRoot(document.getElementById("constelacion")).render(
       html`<${Constelacion} propuestas=${propuestas} />`
     );
