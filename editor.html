@@ -134,6 +134,12 @@
     }
 
     .nodo.origen { border-width: 3px; border-color: #fff; }
+    .nodo-titulo.fecha { font-size: 15px; letter-spacing: 0.04em; }
+    .nodo-titulo.falta { color: #777; font-style: italic; }
+    .catalogo .fecha { color: #f6c445; margin-left: 6px; font-size: 12px; }
+    .nodo.cuadro { border-radius: 2px; background: #000; min-width: 40px; min-height: 40px; }
+    .nodo.cuadro img { display: block; pointer-events: none; }
+    #editor.original .catalogo li img { border-radius: 2px; object-fit: contain; background: transparent; }
     .nodo.sel { outline: 3px solid #f6c445; outline-offset: 4px; }
 
     .nodo-titulo {
@@ -323,6 +329,7 @@
           alt: img[1].trim(),
           src: sinBarra(img[2]),
           tags: [...resto.matchAll(/\*([a-z0-9-]+)\*/g)].map((m) => m[1]),
+          fecha: resto.match(/^fecha:\s*(.+)$/m)?.[1].trim() ?? "",
           oculta: antes.lastIndexOf("<!--") > antes.lastIndexOf("-->"),
         });
       }
@@ -364,6 +371,8 @@
       const meta = {
         titulo: pre.match(/^# (.+)$/m)?.[1].trim() ?? "",
         modo: pre.match(/^modo:\s*(\S+)/m)?.[1] ?? "libre",
+        forma: pre.match(/^forma:\s*(\S+)/m)?.[1] ?? "circulo",
+        etiqueta: pre.match(/^etiqueta:\s*(\S+)/m)?.[1] ?? "nombre",
         incluye: pre.match(/^incluye:\s*(.+)$/m)?.[1].trim() ?? "",
         lectura: seccion("lectura"),
         grupos: seccion("grupos"),
@@ -421,6 +430,8 @@
 
     function serializar(meta, nodes, edges) {
       const L = ["# " + (meta.titulo.trim() || "Constelación"), "", "modo: " + meta.modo];
+      if (meta.forma === "original") L.push("forma: original");
+      if (meta.etiqueta === "fecha") L.push("etiqueta: fecha");
       if (meta.incluye.trim()) L.push("incluye: " + meta.incluye.trim());
       L.push("");
       if (meta.lectura.trim()) L.push("## Lectura", "", meta.lectura.trim(), "");
@@ -437,7 +448,7 @@
         const d = n.data;
         L.push("## " + d.slug, "", "![" + d.alt + "](./" + d.src + ")", "");
         if (d.texto.trim()) L.push(d.texto.trim(), "");
-        pos[d.slug] = [Math.round(n.position.x + d.size / 2), Math.round(n.position.y + d.size / 2)];
+        pos[d.slug] = [Math.round(n.position.x), Math.round(n.position.y)]; // nodeOrigin: centro
       }
       // Comentario: constelacion.html lo usa en modo "libre"; el resto lo ignora.
       L.push("<!-- posiciones: " + JSON.stringify(pos) + " -->", "");
@@ -446,7 +457,40 @@
 
     // --- nodos y aristas ---
 
+    // Debajo de la imagen: su nombre o su fecha. Si falta la fecha, se avisa.
+    function Leyenda({ data }) {
+      if (data.etiqueta !== "fecha") return html`<span className="nodo-titulo">${data.slug}</span>`;
+      if (data.fecha) return html`<span className="nodo-titulo fecha">${data.fecha}</span>`;
+      return html`<span className="nodo-titulo falta">${data.slug} · sin fecha</span>`;
+    }
+
+    // Campo de fecha: se guarda en imagenes.md al salir del campo o con Enter.
+    function CampoFecha({ it, alGuardar }) {
+      const [valor, setValor] = useState(it.fecha);
+      useEffect(() => setValor(it.fecha), [it.slug, it.fecha]);
+      const guardar = () => { if (valor.trim() !== it.fecha) alGuardar(it.slug, valor.trim()); };
+      return html`
+        <label>fecha: año, siglo o época (se guarda en imagenes.md)</label>
+        <input
+          value=${valor}
+          placeholder="ej: 1910, ca. 1450, s. XV, antigüedad"
+          onInput=${(e) => setValor(e.target.value)}
+          onBlur=${guardar}
+          onKeyDown=${(e) => e.key === "Enter" && e.target.blur()}
+        />
+      `;
+    }
+
     function Burbuja({ data, selected }) {
+      const clase = "nodo" + (data.origen ? " origen" : "") + (selected ? " sel" : "");
+      if (data.forma === "original")
+        return html`
+          <div className=${clase + " cuadro"} title=${data.alt}>
+            <img src=${data.src} alt="" draggable="false" style=${{ maxWidth: data.size, maxHeight: data.size }} />
+            <${Handle} type="source" position=${Position.Bottom} className="asa" />
+            <${Leyenda} data=${data} />
+          </div>
+        `;
       return html`
         <div
           className=${"nodo" + (data.origen ? " origen" : "") + (selected ? " sel" : "")}
@@ -454,7 +498,7 @@
           title=${data.alt}
         >
           <${Handle} type="source" position=${Position.Bottom} className="asa" />
-          <span className="nodo-titulo">${data.slug}</span>
+          <${Leyenda} data=${data} />
         </div>
       `;
     }
@@ -463,9 +507,17 @@
       x: n.internals.positionAbsolute.x + n.measured.width / 2,
       y: n.internals.positionAbsolute.y + n.measured.height / 2,
     });
-    const hacia = (p, q, r) => {
-      const d = Math.hypot(q.x - p.x, q.y - p.y) || 1;
-      return { x: p.x + ((q.x - p.x) / d) * r, y: p.y + ((q.y - p.y) / d) * r };
+    // Punto del borde de `n` (círculo o rectángulo) en dirección a `q`.
+    const hacia = (n, p, q, original) => {
+      const dx = q.x - p.x;
+      const dy = q.y - p.y;
+      if (original) {
+        const k = Math.min(n.measured.width / 2 / (Math.abs(dx) || 1e-9), n.measured.height / 2 / (Math.abs(dy) || 1e-9));
+        return { x: p.x + dx * k, y: p.y + dy * k };
+      }
+      const d = Math.hypot(dx, dy) || 1;
+      const r = n.measured.width / 2;
+      return { x: p.x + (dx / d) * r, y: p.y + (dy / d) * r };
     };
 
     // Arista flotante: va de borde a borde; si hay varias entre los mismos dos
@@ -479,8 +531,9 @@
       const d = Math.hypot(b.x - a.x, b.y - a.y) || 1;
       const off = data?.desvio ?? 0;
       const c = { x: (a.x + b.x) / 2 - ((b.y - a.y) / d) * off, y: (a.y + b.y) / 2 + ((b.x - a.x) / d) * off };
-      const p1 = hacia(a, c, s.measured.width / 2);
-      const p2 = hacia(b, c, t.measured.width / 2);
+      const original = data?.forma === "original";
+      const p1 = hacia(s, a, c, original);
+      const p2 = hacia(t, b, c, original);
       const path = "M" + p1.x + "," + p1.y + " Q" + c.x + "," + c.y + " " + p2.x + "," + p2.y;
       const lx = 0.25 * p1.x + 0.5 * c.x + 0.25 * p2.x;
       const ly = 0.25 * p1.y + 0.5 * c.y + 0.25 * p2.y;
@@ -514,7 +567,7 @@
       return {
         id: it.slug,
         type: "burbuja",
-        position: { x: c.x - size / 2, y: c.y - size / 2 },
+        position: { x: c.x, y: c.y }, // con nodeOrigin [0.5, 0.5] es el centro
         deletable: it.slug !== ORIGEN,
         data: { ...it, size, origen: it.slug === ORIGEN },
       };
@@ -580,7 +633,7 @@
       const contador = useRef(0);
       const [archivos, setArchivos] = useState(archivosIniciales);
       const [archivo, setArchivo] = useState(null);
-      const [meta, setMeta] = useState({ titulo: "", modo: "libre", incluye: "", lectura: "", grupos: "" });
+      const [meta, setMeta] = useState({ titulo: "", modo: "libre", forma: "circulo", etiqueta: "nombre", incluye: "", lectura: "", grupos: "" });
       const [nodes, setNodes, onNodesChange] = useNodesState([]);
       const [edges, setEdges, onEdgesChange] = useEdgesState([]);
       const [sel, setSel] = useState(null);
@@ -616,6 +669,10 @@
         const h = decodeURIComponent(location.hash.slice(1));
         cargar(archivosIniciales.includes(h) ? h : "constelacion.md");
       }, []);
+
+      useEffect(() => {
+        document.getElementById("editor").classList.toggle("original", meta.forma === "original");
+      }, [meta.forma]);
 
       useEffect(() => {
         const avisar = (e) => { if (sucio) { e.preventDefault(); e.returnValue = ""; } };
@@ -656,7 +713,7 @@
         if (archivos.includes(ruta)) return cargar(ruta);
         if (sucio && !confirm("Hay cambios sin guardar. ¿Descartarlos?")) return;
         const mago = catalogo.find((it) => it.slug === ORIGEN);
-        setMeta({ titulo: nombre, modo: "libre", incluye: "", lectura: "", grupos: "" });
+        setMeta((m) => ({ titulo: nombre, modo: "libre", forma: m.forma, etiqueta: m.etiqueta, incluye: "", lectura: "", grupos: "" }));
         setNodes(mago ? [crearNodo({ slug: ORIGEN, alt: mago.alt, src: mago.src, texto: mago.alt }, { x: 0, y: 0 })] : []);
         setEdges([]);
         setSel(null);
@@ -684,6 +741,16 @@
           setEstado({ texto: "tags de " + slug + " guardados en imagenes.md", error: false });
         } catch (err) {
           setEstado({ texto: "no se pudieron guardar los tags: " + err.message, error: true });
+        }
+      }
+
+      async function guardarFecha(slug, fecha) {
+        try {
+          const j = await api("api/fecha", { slug, fecha });
+          setCatalogo((cs) => cs.map((c) => (c.slug === slug ? { ...c, fecha: j.fecha } : c)));
+          setEstado({ texto: "fecha de " + slug + " guardada en imagenes.md", error: false });
+        } catch (err) {
+          setEstado({ texto: "no se pudo guardar la fecha: " + err.message, error: true });
         }
       }
 
@@ -718,7 +785,7 @@
       // Primer punto cerca de `c` que no pise otra imagen (espiral hacia afuera).
       function lugarLibre(c) {
         const ocupado = (p) => nodes.some((n) =>
-          Math.hypot(n.position.x + n.data.size / 2 - p.x, n.position.y + n.data.size / 2 - p.y) < SIZE + 40);
+          Math.hypot(n.position.x - p.x, n.position.y - p.y) < SIZE + 40);
         for (let i = 0; i < 400; i++) {
           const a = i * 0.8;
           const r = i * 12;
@@ -732,7 +799,7 @@
         const ya = nodes.find((n) => n.id === it.slug);
         if (ya) {
           setSel({ tipo: "nodo", id: ya.id });
-          rf.setCenter(ya.position.x + ya.data.size / 2, ya.position.y + ya.data.size / 2, { zoom: rf.getZoom(), duration: 400 });
+          rf.setCenter(ya.position.x, ya.position.y, { zoom: rf.getZoom(), duration: 400 });
           return;
         }
         const nodo = crearNodo({ slug: it.slug, alt: it.alt, src: it.src, texto: it.alt }, c ?? lugarLibre(centroVista()));
@@ -786,10 +853,20 @@
             label: e.data.texto,
             markerStart: e.data.flecha.startsWith("<") ? marca : undefined,
             markerEnd: e.data.flecha.endsWith(">") ? marca : undefined,
-            data: { ...e.data, desvio: (i - (lista.length - 1) / 2) * 70 * signo, elegir: elegirArista },
+            data: { ...e.data, desvio: (i - (lista.length - 1) / 2) * 70 * signo, elegir: elegirArista, forma: meta.forma },
           };
         });
-      }, [edges]);
+      }, [edges, meta.forma]);
+
+      // Los nodos se dibujan con la forma de toda la constelación.
+      const nodosVista = useMemo(() => {
+        const fechas = new Map(catalogo.map((c) => [c.slug, c.fecha]));
+        return nodes.map((n) => {
+          const extra = { forma: meta.forma, etiqueta: meta.etiqueta, fecha: fechas.get(n.id) ?? "" };
+          const igual = Object.entries(extra).every(([k, v]) => n.data[k] === v);
+          return igual ? n : { ...n, data: { ...n.data, ...extra } };
+        });
+      }, [nodes, meta.forma, meta.etiqueta, catalogo]);
 
       const alCambiarNodos = (cambios) => {
         onNodesChange(cambios);
@@ -850,6 +927,14 @@
             ${[...new Set([...archivos, archivo].filter(Boolean))].map((a) => html`<option key=${a} value=${a}>${a}</option>`)}
           </select>
           <button type="button" onClick=${nueva}>Nueva</button>
+          <div className="vistas" title="forma de las imágenes en toda la constelación (también en constelacion.html)">
+            <button type="button" className=${meta.forma !== "original" ? "activo" : ""} onClick=${() => cambiarMeta({ forma: "circulo" })}>círculos</button>
+            <button type="button" className=${meta.forma === "original" ? "activo" : ""} onClick=${() => cambiarMeta({ forma: "original" })}>original</button>
+          </div>
+          <div className="vistas" title="qué se lee debajo de cada imagen (también en constelacion.html)">
+            <button type="button" className=${meta.etiqueta !== "fecha" ? "activo" : ""} onClick=${() => cambiarMeta({ etiqueta: "nombre" })}>nombres</button>
+            <button type="button" className=${meta.etiqueta === "fecha" ? "activo" : ""} onClick=${() => cambiarMeta({ etiqueta: "fecha" })}>fechas</button>
+          </div>
           <button type="button" className="primario" onClick=${guardar} disabled=${!sucio}>Guardar</button>
           <span className=${"estado" + (estado.error ? " error" : "")}>
             ${estado.texto || (sucio ? "cambios sin guardar" : "")}
@@ -879,7 +964,7 @@
               >
                 <img src=${it.src} alt="" loading="lazy" />
                 <div>
-                  <div className="slug">${it.slug}</div>
+                  <div className="slug">${it.slug}${it.fecha && html`<span className="fecha">${it.fecha}</span>`}</div>
                   <div className="tags">${it.tags.join(" ")}</div>
                 </div>
               </li>
@@ -890,7 +975,8 @@
         <main className="lienzo" ref=${lienzo}>
           ${meta.incluye && html`<div className="aviso">esta constelación superpone otras (incluye: ${meta.incluye}); aquí solo se editan sus nodos propios</div>`}
           <${ReactFlow}
-            nodes=${nodes}
+            nodes=${nodosVista}
+            nodeOrigin=${[0.5, 0.5]}
             edges=${visibles}
             nodeTypes=${nodeTypes}
             edgeTypes=${edgeTypes}
@@ -915,6 +1001,7 @@
             <button type="button" onClick=${() => setTagSel(null)}>← todos los tags</button>
             <h2 style=${{ marginTop: "12px" }}>${itTags.slug}</h2>
             <img className="muestra" src=${itTags.src} alt=${itTags.alt} />
+            <${CampoFecha} it=${itTags} alGuardar=${guardarFecha} />
             <${TagsImagen} it=${itTags} vocab=${vocab} conteo=${conteo} alCambiar=${ponerTags} alCrear=${crearTag} />
           ` : html`
             <h2>Tags</h2>
@@ -942,6 +1029,7 @@
           `) : nodoSel ? html`
             <h2>${nodoSel.data.slug}</h2>
             <img className="muestra" src=${nodoSel.data.src} alt=${nodoSel.data.alt} />
+            ${delCatalogo && html`<${CampoFecha} it=${delCatalogo} alGuardar=${guardarFecha} />`}
             <label>texto de la entrada (markdown)</label>
             <textarea
               rows="10"

@@ -53,6 +53,43 @@ def editar_tags(md, slug, tags):
     return md[:ini] + "\n".join(lineas) + md[fin:]
 
 
+LINEA_FECHA = re.compile(r"^fecha:.*$")
+
+
+def bloque(md, slug):
+    """Inicio y fin del cuerpo del bloque "## slug" en imagenes.md."""
+    m = re.search(rf"^## {re.escape(slug)}[ \t]*$", md, re.M)
+    if not m:
+        raise ValueError(f"no existe la imagen {slug}")
+    ini = m.end()
+    sig = re.search(r"^## ", md[ini:], re.M)
+    return ini, ini + sig.start() if sig else len(md)
+
+
+def editar_fecha(md, slug, fecha):
+    """Escribe, cambia o borra la línea "fecha: ..." del bloque "## slug"."""
+    fecha = " ".join(fecha.split())
+    ini, fin = bloque(md, slug)
+    lineas = md[ini:fin].split("\n")
+    idx = next((i for i, l in enumerate(lineas) if LINEA_FECHA.match(l)), None)
+    if idx is not None:
+        if fecha:
+            lineas[idx] = "fecha: " + fecha
+        else:
+            del lineas[idx]
+            if 0 < idx < len(lineas) and lineas[idx - 1] == "" and lineas[idx] == "":
+                del lineas[idx]
+    elif fecha:
+        # después de la línea de tags o, si no hay, después de la imagen
+        k = next((i for i, l in enumerate(lineas) if LINEA_TAGS.match(l)), None)
+        if k is None:
+            k = next((i for i, l in enumerate(lineas) if "](" in l), None)
+        if k is None:
+            raise ValueError(f"{slug} no tiene imagen")
+        lineas[k + 1:k + 1] = ["", "fecha: " + fecha]
+    return md[:ini] + "\n".join(lineas) + md[fin:]
+
+
 def archivos():
     lista = ["constelacion.md"]
     lista += sorted(f"constelaciones/{p.name}" for p in (BASE / "constelaciones").glob("*.md"))
@@ -108,6 +145,16 @@ class Manejador(SimpleHTTPRequestHandler):
             ruta.write_text(md, encoding="utf-8")
             print(f"tags de {datos['slug']}: {' '.join(tags) or '(ninguno)'}")
             return self.responder(200, {"ok": True, "tags": tags})
+        if url.path == "/api/fecha":
+            datos = self.leer_json()
+            ruta = BASE / "imagenes.md"
+            try:
+                md = editar_fecha(ruta.read_text(encoding="utf-8"), datos.get("slug", ""), datos.get("fecha", ""))
+            except ValueError as e:
+                return self.responder(400, {"error": str(e)})
+            ruta.write_text(md, encoding="utf-8")
+            print(f"fecha de {datos['slug']}: {datos.get('fecha') or '(ninguna)'}")
+            return self.responder(200, {"ok": True, "fecha": " ".join(datos.get("fecha", "").split())})
         if url.path == "/api/tags/nuevo":
             tag = self.leer_json().get("tag", "")
             if not TAG.match(tag):

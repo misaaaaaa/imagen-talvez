@@ -111,3 +111,43 @@ body {
   cursor: default;
 }
 
+
+/* pantalla ancha: imagen a la izquierda, texto a la derecha con todo el alto */
+@media (min-width: 900px) {
+  .modal-figure {
+    flex-direction: row;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .modal-figure img {
+    max-width: 58vw;
+    max-height: 90vh;
+  }
+
+  .modal-figure figcaption {
+    margin-top: 0;
+    flex: 0 1 34vw;
+    max-width: 560px;
+    min-width: 320px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 16px 22px;
+    font-size: 1rem;
+    line-height: 1.55;
+    text-align: left;
+  }
+}
+
+/* en pantallas angostas el texto no recorta: baja y se desplaza */
+@media (max-width: 899px) {
+  .modal-figure figcaption {
+    max-width: 92vw;
+    max-height: 35vh;
+    overflow-y: auto;
+  }
+
+  .modal-figure img {
+    max-height: 55vh;
+  }
+}

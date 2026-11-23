@@ -17,6 +17,7 @@ Vocabulario de tags de imagenes.md. editor.html lo lee para mostrar los disponib
 ## temas
 
 - 2plano
+- asombro
 - alquimia
 - arte
 - biblia
@@ -27,6 +28,7 @@ Vocabulario de tags de imagenes.md. editor.html lo lee para mostrar los disponib
 - cosas
 - educacion
 - espectaculo
+- fauna
 - hacker
 - hechicera
 - libro

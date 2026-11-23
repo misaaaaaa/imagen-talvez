@@ -8,13 +8,17 @@
 
 ![Michael Faraday realiza una demostración ante un público numeroso en una sala de conferencias victoriana.](./imagenes/faraday.jpg)
 
-*ciencia* *s-xix* *mesa* *cosas* *espectaculo* *manos* *educacion* *2plano*
+*ciencia* *s-xix* *mesa* *cosas* *espectaculo* *manos* *educacion* *2plano* *asombro*
+
+fecha: 1856
 
 ## mago
 
 ![Carta del tarot Rider-Waite con el número romano I.](./imagenes/mago.jpg)
 
 *tarot* *s-xx* *mesa* *cosas* *manos*
+
+fecha: 1910
 
 ## mago-faraday
 
@@ -60,11 +64,15 @@
 
 *s-xxi* *s-xx* *charlatan* *mesa* *cosas* *vicioso* *manos* *circulo*
 
+fecha: ca. 2000
+
 ## prestidigitador
 
 ![Hieronymus Bosch (El Bosco) o seguidor, El prestidigitador (L'Escamoteur / The Conjurer), ca. 1496–1502. Óleo sobre tabla, Musée municipal de Saint-Germain-en-Laye, Francia. Obra emblemática del Renacimiento flamenco que retrata el ilusionismo profano y callejero: un prestidigitador realiza el truco de manos con cubiletes y bolitas ante la muchedumbre asombrada, mientras un cómplice aprovecha la distracción del público para sustraer la bolsa de monedas a un espectador embelesado. https://commons.wikimedia.org/wiki/File:Hieronymus_Bosch_(follower)_-_The_Conjurer_(Mus%C3%A9e_Saint-Germain-en-Laye).jpg](./buscador-magos/magos-img/03-mago-renacimiento-el-prestidigitador-bosch.jpg)
 
 *s-xvi* *charlatan* *mesa* *vicioso* *manos* *2plano*
+
+fecha: ca. 1496–1502
 
 ## merlin-blaise
 
@@ -114,6 +122,8 @@
 
 *s-xviii* *tarot* *charlatan* *mesa* *cosas* *manos*
 
+fecha: 1760
+
 ## alquimista-wright
 
 ![Joseph Wright of Derby, El alquimista en busca de la piedra filosofal descubre el fósforo (The Alchymist, In Search of the Philosopher's Stone), 1771. Óleo sobre lienzo (127 × 101,6 cm), Derby Museum and Art Gallery, Derby, Reino Unido. Obra maestra del claroscuro en plena Ilustración que capta la encrucijada histórica entre el misticismo arcano del mago-alquimista y los albores de la química moderna: en su laboratorio gótico abovedado, el anciano adepto cae de rodillas asombrado al ver cómo su retorta destila una sustancia incandescente que emite una luz sobrenatural y pura. https://www.derbymuseums.org/collection/item/the-alchymist-in-search-of-the-philosophers-stone-1771](./buscador-magos/magos-img/16-mago-ilustracion-el-alquimista-wright-of-derby.jpg)
@@ -160,7 +170,9 @@
 
 ![Pietro Longhi, El charlatán (Il Ciarlatano), 1757. Óleo sobre lienzo (62 × 50 cm), Ca' Rezzonico, Museo del Settecento Veneziano, Venecia. Documento pictórico del siglo XVIII veneciano que muestra la figura popular del embaucador y mago de plaza pública: subido a un estrado con máscara y capa, realiza pases de manos y ofrece remedios prodigiosos ante caballeros y damas con la tradicional _bauta_ veneciana. https://carezzonico.visitmuve.it/](./buscador-magos/magos-img/31-mago-ilustracion-el-charlatan-pietro-longhi.jpg)
 
-*s-xviii* *espectaculo* *manos* *charlatan* *2plano*
+*s-xviii* *espectaculo* *manos* *charlatan* *2plano* *asombro*
+
+fecha: 1757
 
 ## hecate
 
@@ -256,7 +268,9 @@
 
 ![Louis Figuier (1819–1894). Héron fait l’expérience de l’éolipyle devant les savants de l’École d’Alexandrie. Source Figuier - Les Merveilles de la science, 1867 - 1891, Tome 1.djvu https://commons.wikimedia.org/wiki/File:T1-_d011-_Fig._3_-_H%C3%A9ron_exp%C3%A9rimente_l_%C3%A9olipyle.png](./imagenes/heron.png)
 
-*s-xix* *ciencia* *libro* *manos* *educacion*
+*s-xix* *ciencia* *libro* *manos* *educacion* *asombro*
+
+fecha: S. I
 
 ## filosofia-oculta
 
@@ -266,7 +280,7 @@
 
 ![El mago enmascarado, personaje de TV del Siglo XXI, quien acostumbraba a revelar sus trucos posterior a comerciales.](./imagenes/magoenmascarado.webp)
 
-*s-xxi* *espectaculo* *2plano*
+*s-xxi* *espectaculo* *2plano* *asombro* *educacion*
 
 ## hamilton
 
@@ -278,7 +292,7 @@
 
 ![Remedios Varo, El juglar (El mago) [The Juggler (The Magician)], 1956. Óleo e incrustaciones de nácar sobre tabla (91 × 122 cm), The Museum of Modern Art (MoMA), Nueva York (n.º 736.2018, donación de Joan H. Tisch, por intercambio). Expuesta por primera vez en la muestra individual de Varo en la Galería Diana de Ciudad de México en 1956. En una plaza de arquitectura metafísica, un mago de sombrero cónico y capa roja despliega sus prodigios —esferas luminosas que flotan en el aire, polvo centelleante, frascos y amuletos— desde un carromato ambulante del que asoman un león, un búho, una cabra, palomas y una figura femenina en la ventana. Frente a él, una multitud de personajes idénticos, envueltos en una misma tela gris que los une como un solo cuerpo, contempla el espectáculo: una alegoría surrealista del ilusionista como figura que fascina y manipula a una masa uniforme y pasiva. https://www.moma.org/collection/works/291307](./imagenes/varo.png)
 
-*s-xx* *espectaculo* *sobrenatural*
+*s-xx* *espectaculo* *sobrenatural* *asombro*
 
 ## melancolia
 
@@ -296,4 +310,60 @@
 
 ![Relieve de Dascilio (Daskyleion, hoy Ergili, Turquía), siglo V a.C., Museo Arqueológico de Estambul. Fragmento de una escena de sacrificio: un sacerdote persa (magus) con el tocado que le cubre la boca (paitidana, para que su aliento no contamine el fuego) sostiene un haz de varillas rituales (barsom) ante las cabezas de un carnero y un toro. Dascilio era la sede de una satrapía aqueménida en Anatolia, junto al mundo griego, uno de los lugares de contacto por donde la palabra magos llegó al griego. Foto de Jona Lendering, CC0. https://commons.wikimedia.org/wiki/File:Dascylium_magians_iam.jpg](./imagenes/dascilio-magos.jpg)
 
-*antiguedad* *oriente* *cosas*
+*antiguedad* *oriente* *cosas* *manos*
+
+## satin-bowerbird
+
+![ave que recolecta objetos azules](./imagenes/satin-bowerbird.jpg)
+
+*fauna* *asombro* *cosas*
+
+fecha: S. XX-XXI
+
+## cangrejo
+
+![cangrejo utilizando una tapa de lapiz bic como concha](./imagenes/cangrejo-ermitano.webp)
+
+*fauna* *cosas*
+
+## holmes
+
+![elizabeth holmes posando con una cápsula de sangre](./imagenes/holmes.jpg)
+
+*mujer* *cosas* *charlatan* 
+
+## eusapia
+
+![eusapia aplicando espiritismo con científicos](./imagenes/eusapia.png)
+
+*mujer* *mesa* *asombro* *ciencia*
+
+fecha: 1908
+
+## houdin
+
+![Suspension aerienne du fils de Robert Houdin. Illustration for L'Illustration, Journal Universel, 16 October 1847.](./imagenes/houdin.jpeg)
+
+*s-xix* *asombro* *educacion* *cosas*
+
+## magician-nextworldtarot
+
+![carta del mago del "tarot del nuevo mundo", creado pensado en le presente y con los preceptos éticos de nuestra época. La imagen muestra a una mujer con Hiyab investigando de diversas fuentes a la vez, consumiendo pócimas como café, y mirando hacia el horizonte.](./imagenes/next-world-tarot.jpeg)
+
+*s-xxi* *mujer* *educacion* *cosas* *manos* *pocima*
+
+## bagatto
+
+![The Magician card from a 15th-century tarot deck. Pierpont Morgan, Visconti Sforza](./imagenes/bagatto.jpg)
+
+*s-xvi* *charlatan* *tarot* *cosas* *mesa* *manos*
+
+fecha: S. XVI
+
+## le-bateleur
+
+![Le Bateleur, Court de Gébelin, Monde primitif, vol. VIII (1781)](./imagenes/bateleur.png)
+
+*s-xviii* *charlatan* *tarot* *cosas* *mesa* *manos*
+
+fecha: 1781

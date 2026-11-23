@@ -88,6 +88,22 @@
       background: #e0e0e0;
     }
 
+    .burbuja-titulo.fecha {
+      font-size: 15px;
+      letter-spacing: 0.04em;
+    }
+
+    .burbuja.cuadro {
+      border-radius: 2px;
+      background: #000;
+      min-width: 40px;
+      min-height: 40px;
+    }
+
+    .burbuja.cuadro img {
+      display: block;
+    }
+
     .burbuja.origen {
       border-color: #fff;
       border-width: 3px;
@@ -321,6 +337,7 @@
           alt: img[1].trim(),
           src: sinBarra(img[2]),
           texto: img[1].trim(),
+          fecha: cuerpo.match(/^fecha:\s*(.+)$/m)?.[1].trim() ?? "",
         });
       }
       return catalogo;
@@ -360,6 +377,8 @@
       const preambulo = md.split(/^## /m)[0];
       const titulo = preambulo.match(/^# (.+)$/m)?.[1].trim() ?? "";
       const modo = preambulo.match(/^modo:\s*(\S+)/m)?.[1] ?? "aleatorio";
+      const forma = preambulo.match(/^forma:\s*(\S+)/m)?.[1] ?? "circulo"; // o "original"
+      const etiqueta = preambulo.match(/^etiqueta:\s*(\S+)/m)?.[1] ?? "nombre"; // o "fecha"
       const incluye = (preambulo.match(/^incluye:\s*(.+)$/m)?.[1] ?? "")
         .split(",").map(norm).filter(Boolean);
       const bs = bloques(md);
@@ -413,9 +432,11 @@
           markerEnd: flecha.endsWith(">") ? marca : undefined,
         });
       }
+      // La fecha es de la imagen: siempre viene de imagenes.md.
+      for (const it of items.values()) it.fecha = catalogo.get(it.id)?.fecha ?? "";
       // La carta va siempre primero: es el origen de toda disposición.
       const lista = [...items.values()].sort((x, y) => (y.id === ORIGEN) - (x.id === ORIGEN));
-      return { titulo, modo, lectura, incluye, items: lista, edges, grupos, posiciones };
+      return { titulo, modo, forma, etiqueta, lectura, incluye, items: lista, edges, grupos, posiciones };
     }
 
     // Superpone varias propuestas: une sus nodos y conserva todas sus aristas,
@@ -687,9 +708,15 @@
       });
       const a = centro(nodo);
       const b = centro(otro);
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      if (nodo.data?.forma === "original") {
+        const k = Math.min(nodo.measured.width / 2 / (Math.abs(dx) || 1e-9), nodo.measured.height / 2 / (Math.abs(dy) || 1e-9));
+        return { x: a.x + dx * k, y: a.y + dy * k };
+      }
       const r = nodo.measured.width / 2;
-      const d = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-      return { x: a.x + ((b.x - a.x) / d) * r, y: a.y + ((b.y - a.y) / d) * r };
+      const d = Math.hypot(dx, dy) || 1;
+      return { x: a.x + (dx / d) * r, y: a.y + (dy / d) * r };
     }
 
     function Arista({ id, source, target, markerStart, markerEnd, label, style, data }) {
@@ -720,7 +747,29 @@
 
     const oculto = { opacity: 0, top: "50%", left: "50%", pointerEvents: "none" };
 
+    // Debajo de la imagen: su nombre o, si la constelación lo pide, su fecha.
+    function Leyenda({ data }) {
+      if (data.etiqueta === "fecha" && data.fecha)
+        return html`<span className="burbuja-titulo fecha">${data.fecha}</span>`;
+      return html`<span className="burbuja-titulo">${data.titulo}</span>`;
+    }
+
     function Burbuja({ data }) {
+      // Forma original: la imagen con su proporción, el lado mayor mide data.size.
+      if (data.forma === "original")
+        return html`
+          <button
+            type="button"
+            className=${"burbuja cuadro" + (data.origen ? " origen" : "") + (data.miradas ?? []).map((m) => " m-" + m).join("")}
+            aria-label=${data.alt}
+            onClick=${data.onClick}
+          >
+            <img src=${data.src} alt="" draggable="false" style=${{ maxWidth: data.size, maxHeight: data.size }} />
+            <${Handle} type="target" position=${Position.Top} style=${oculto} />
+            <${Handle} type="source" position=${Position.Top} style=${oculto} />
+            <${Leyenda} data=${data} />
+          </button>
+        `;
       return html`
         <button
           type="button"
@@ -731,7 +780,7 @@
         >
           <${Handle} type="target" position=${Position.Top} style=${oculto} />
           <${Handle} type="source" position=${Position.Top} style=${oculto} />
-          <span className="burbuja-titulo">${data.titulo}</span>
+          <${Leyenda} data=${data} />
         </button>
       `;
     }
@@ -748,7 +797,7 @@
 
     function Diagrama({ nodes: iniciales, edges }) {
       const [nodes, , onNodesChange] = useNodesState(
-        iniciales.map((n) => ({
+        iniciales.map((n) => n.origin ? n : ({
           ...n,
           position: {
             x: n.position.x - (n.data.size ?? 0) / 2,
@@ -805,7 +854,7 @@
       return Math.round(SIZE * (0.7 + 0.15 * it.miradas.length));
     }
 
-    function nodos({ modo, items, edges, grupos, posiciones }, barajado) {
+    function nodos({ modo, forma, etiqueta, items, edges, grupos, posiciones }, barajado) {
       const { pos, etiquetas } = disponer(modo, items, edges, grupos, barajado, posiciones);
       return [
         ...items.map((it) => {
@@ -814,7 +863,8 @@
             id: it.id,
             type: "burbuja",
             position: pos.get(it.id),
-            data: { ...it, origen, size: tamano(it), onClick: () => abrir(it) },
+            origin: [0.5, 0.5], // la posición es el centro, sea cual sea la forma
+            data: { ...it, origen, forma, etiqueta, size: tamano(it), onClick: () => abrir(it) },
           };
         }),
         ...etiquetas.map((e, i) => ({
