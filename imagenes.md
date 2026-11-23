@@ -367,3 +367,18 @@ fecha: S. XVI
 *s-xviii* *charlatan* *tarot* *cosas* *mesa* *manos*
 
 fecha: 1781
+## belline
+
+![Edmond (Edmond Billaudot), Le Mage (Arcano I), ca. 1863–1870. Carta dibujada a mano en tinta para su propio uso de cartomante, publicada por Grimaud como Grand Tarot Belline. Un mago barbado de túnica y tocado a la egipcia, con un bastón en la mano, apunta hacia abajo junto a una piedra cúbica sobre la que hay una copa, una espada y una moneda. Arriba se lee «la volonté» y abajo un consejo: «Une ferme volonté et la foi en toi-même, guidées par la raison et l'amour de la justice, te conduiront au but que tu veux atteindre et te préserveront du péril du chemin».](./imagenes/belline.png)
+
+*s-xix* *tarot* *ocultismo* *mesa* *cosas* *manos*
+
+fecha: ca. 1863–1870
+
+## wirth
+
+![Oswald Wirth, Le Bateleur (Arcano I), de Les 22 Arcanes du Tarot Kabbalistique, 1889. Bibliothèque nationale de France, Département des Estampes. Un joven de sombrero de ala ancha sostiene una varita en alto y apoya la otra mano sobre una mesa de cuatro patas con los cuatro palos: copa, espada y monedas. Abajo, el número 1, el nombre de la carta y la letra hebrea alef.](./imagenes/wirth.jpg)
+
+*s-xix* *tarot* *ocultismo* *mesa* *cosas* *manos*
+
+fecha: 1889

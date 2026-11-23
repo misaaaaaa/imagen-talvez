@@ -17,6 +17,9 @@ body {
   width: 100vw;
   height: 100vh;
   gap: 2px;
+  grid-auto-flow: dense;
+  grid-auto-rows: 0;
+  overflow: hidden;
   background-color: #000;
 }
 
@@ -25,7 +28,8 @@ body {
   height: 100%;
   min-width: 0;
   min-height: 0;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center;
   background-color: #000;
   display: block;
   user-select: none;
